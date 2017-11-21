@@ -13,19 +13,13 @@ import java.util.ArrayList;
 import timber.log.Timber;
 
 public class RecipesListAdapter
-        extends RecyclerView.Adapter<SimpleViewHolder>
-        implements SimpleViewHolder.OnClickListener {
+        extends AbstractRecipesListAdapter  {
 
     private ArrayList<Recipe> mRecipeList;
-    private OnClickListener mOnClickHandler;
 
-
-    public interface OnClickListener {
-        void onClick(Recipe recipe);
-    }
 
     public RecipesListAdapter(OnClickListener onClickRecipeListener) {
-        mOnClickHandler = onClickRecipeListener;
+        super(onClickRecipeListener);
     }
 
 
