@@ -1,6 +1,5 @@
 package com.example.shoji.bakingapp.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.shoji.bakingapp.BuildConfig;
@@ -8,7 +7,7 @@ import com.example.shoji.bakingapp.R;
 
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivityEx {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

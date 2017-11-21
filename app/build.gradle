@@ -29,4 +29,7 @@ dependencies {
 
     //logger - timber - https://github.com/JakeWharton/timber/blob/master/README.md
     implementation 'com.jakewharton.timber:timber:4.6.0'
+
+    //snackbar
+    compile 'com.android.support:design:26.1.0'
 }
