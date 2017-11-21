@@ -1,7 +1,10 @@
-package com.example.shoji.bakingapp;
+package com.example.shoji.bakingapp.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.shoji.bakingapp.BuildConfig;
+import com.example.shoji.bakingapp.R;
 
 import timber.log.Timber;
 
