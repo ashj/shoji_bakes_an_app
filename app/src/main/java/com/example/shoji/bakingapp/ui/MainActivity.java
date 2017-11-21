@@ -5,8 +5,11 @@ import android.os.Bundle;
 import com.example.shoji.bakingapp.BuildConfig;
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.backgroundtask.FetchRecipesListener;
+import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.utils.BakerUtils;
 import com.example.shoji.bakingapp.utils.RecipeJsonUtils;
+
+import java.util.ArrayList;
 
 import timber.log.Timber;
 
@@ -35,8 +38,11 @@ public class MainActivity
     @Override
     public void onFetchRecipesFinished(String recipeJsonString) {
         mRecipesJson = recipeJsonString;
-        Timber.d(recipeJsonString);
+        //Timber.d(recipeJsonString);
 
-        RecipeJsonUtils.listRecipes(mRecipesJson);
+        ArrayList<Recipe> list = RecipeJsonUtils.listRecipes(mRecipesJson);
+        for(int i = 0; i < list.size(); i++)
+            Timber.d((list.get(i).toString()));
+
     }
 }

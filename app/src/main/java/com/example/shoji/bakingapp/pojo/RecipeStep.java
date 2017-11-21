@@ -10,6 +10,8 @@ public class RecipeStep implements Parcelable {
     private String mVideoUrl;
     private String mThumbnailUrl;
 
+    public RecipeStep() {}
+
     protected RecipeStep(Parcel in) {
         mId = in.readString();
         mShortDescription = in.readString();
@@ -86,4 +88,12 @@ public class RecipeStep implements Parcelable {
         this.mThumbnailUrl = thumbnailUrl;
     }
 
+    @Override
+    public String toString() {
+        return "step id: " + mId
+                + "\nshort description: " + mShortDescription
+                + "\nlong description: " + mLongDescription
+                + "\nvideo url: " + mVideoUrl
+                + "\nthumbnail url: " + mThumbnailUrl;
+    }
 }

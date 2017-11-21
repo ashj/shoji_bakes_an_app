@@ -11,6 +11,8 @@ public class Recipe implements Parcelable {
     private ArrayList<RecipeIngredient> mIngredientList;
     private ArrayList<RecipeStep> mStepList;
 
+    public Recipe() {}
+
     protected Recipe(Parcel in) {
         mId = in.readString();
         mName = in.readString();
@@ -77,4 +79,22 @@ public class Recipe implements Parcelable {
         this.mStepList = stepList;
     }
 
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("recipe id: ").append(mId)
+                .append("\nname: ").append(mName).append("\n");
+        if(mIngredientList != null) {
+            for (int i = 0; i < mIngredientList.size(); i++)
+                sb.append(mIngredientList.get(i).toString()).append("\n");
+            sb.append("\n");
+        }
+        if(mStepList != null) {
+            for (int i = 0; i < mStepList.size(); i++)
+                sb.append(mStepList.get(i).toString()).append("\n");
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 }

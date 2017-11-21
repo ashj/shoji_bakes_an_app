@@ -8,6 +8,8 @@ public class RecipeIngredient implements Parcelable {
     private String mMeasure;
     private String mDescription;
 
+    public  RecipeIngredient() {}
+
     protected RecipeIngredient(Parcel in) {
         mQuantity = in.readString();
         mMeasure = in.readString();
@@ -62,6 +64,13 @@ public class RecipeIngredient implements Parcelable {
 
     public void setDescription(String description) {
         this.mDescription = description;
+    }
+
+    @Override
+    public String toString() {
+        return "quantity: " + mQuantity
+                + "\nmeasure: " + mMeasure
+                + "\ndescription: " + mDescription;
     }
 
 }
