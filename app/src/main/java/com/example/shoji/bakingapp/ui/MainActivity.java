@@ -7,7 +7,6 @@ import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.backgroundtask.FetchRecipesListener;
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.utils.BakerUtils;
-import com.example.shoji.bakingapp.utils.RecipeJsonUtils;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,7 @@ public class MainActivity
         extends AppCompatActivityEx
         implements FetchRecipesListener.OnLoadFinishedListener{
 
-    private String mRecipesJson;
+    private ArrayList<Recipe> mRecipesList;
 
 
     @Override
@@ -36,13 +35,12 @@ public class MainActivity
 
 
     @Override
-    public void onFetchRecipesFinished(String recipeJsonString) {
-        mRecipesJson = recipeJsonString;
+    public void onFetchRecipesFinished(ArrayList<Recipe> result) {
+        mRecipesList = result;
         //Timber.d(recipeJsonString);
 
-        ArrayList<Recipe> list = RecipeJsonUtils.listRecipes(mRecipesJson);
-        for(int i = 0; i < list.size(); i++)
-            Timber.d((list.get(i).toString()));
+        for(int i = 0; i < mRecipesList.size(); i++)
+            Timber.d((mRecipesList.get(i).toString()));
 
     }
 }
