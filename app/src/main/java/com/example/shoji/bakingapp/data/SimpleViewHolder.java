@@ -9,7 +9,7 @@ import com.example.shoji.bakingapp.pojo.Recipe;
 
 import timber.log.Timber;
 
-public class RecipeViewHolder extends RecyclerView.ViewHolder
+public class SimpleViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener {
 
     private OnClickListener mOnClickHandler;
@@ -20,21 +20,22 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder
         void onClick(int position);
     }
 
-    public RecipeViewHolder(View itemView,
+    public SimpleViewHolder(View itemView,
+                            int resIdTitle,
                             OnClickListener onClickHandler) {
         super(itemView);
         mOnClickHandler = onClickHandler;
 
-        mTitle = itemView.findViewById(R.id.recipe_adapter_title_tv);
+        mTitle = itemView.findViewById(resIdTitle);
 
         View.OnClickListener viewOnClickListener = this;
         mTitle.setOnClickListener(viewOnClickListener);
 
     }
 
-    public void bindViewHolder(Recipe recipe) {
+    public void bindViewHolder(String title) {
         // set view here
-        mTitle.setText(recipe.getName());
+        mTitle.setText(title);
 
     }
 

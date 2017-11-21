@@ -4,14 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.shoji.bakingapp.BuildConfig;
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.backgroundtask.FetchRecipesListener;
-import com.example.shoji.bakingapp.data.RecipeAdapter;
+import com.example.shoji.bakingapp.data.RecipesListAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.utils.BakerUtils;
 
@@ -22,12 +21,12 @@ import timber.log.Timber;
 public class MainActivity
         extends AppCompatActivityEx
         implements FetchRecipesListener.OnLoadFinishedListener,
-                    RecipeAdapter.OnClickListener {
+                    RecipesListAdapter.OnClickListener {
     private static final String SAVE_INSTANCE_STATE_RECIPE_DATA = "recipe-data";
     private final static String SAVE_INSTANCE_STATE_LIST_POSITION = "list-position";
 
 
-    private RecipeAdapter mRecipeListAdapter;
+    private RecipesListAdapter mRecipeListAdapter;
     private RecyclerView mRecipeListRecyclerView;
 
     @Override
@@ -61,8 +60,8 @@ public class MainActivity
 
         mRecipeListRecyclerView.setHasFixedSize(true);
 
-        RecipeAdapter.OnClickListener onClickRecipeHandler = this;
-        mRecipeListAdapter = new RecipeAdapter(onClickRecipeHandler);
+        RecipesListAdapter.OnClickListener onClickRecipeHandler = this;
+        mRecipeListAdapter = new RecipesListAdapter(onClickRecipeHandler);
         mRecipeListRecyclerView.setAdapter(mRecipeListAdapter);
 
     }

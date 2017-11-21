@@ -12,42 +12,39 @@ import java.util.ArrayList;
 
 import timber.log.Timber;
 
-public class RecipeAdapter
-        extends RecyclerView.Adapter<RecipeViewHolder>
-        implements RecipeViewHolder.OnClickListener {
+public class RecipesListAdapter
+        extends RecyclerView.Adapter<SimpleViewHolder>
+        implements SimpleViewHolder.OnClickListener {
 
     private ArrayList<Recipe> mRecipeList;
     private OnClickListener mOnClickHandler;
-
 
 
     public interface OnClickListener {
         void onClick(Recipe recipe);
     }
 
-    public RecipeAdapter(OnClickListener onClickRecipeListener) {
+    public RecipesListAdapter(OnClickListener onClickRecipeListener) {
         mOnClickHandler = onClickRecipeListener;
     }
 
 
-
-
     @Override
-    public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         boolean attachToRoot = false;
         View itemView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.recipe_adapter_item, parent, attachToRoot);
 
-        RecipeViewHolder.OnClickListener onClickHandler = this;
+        SimpleViewHolder.OnClickListener onClickHandler = this;
 
-        return new RecipeViewHolder(itemView, onClickHandler);
+        return new SimpleViewHolder(itemView, R.id.recipe_adapter_title_tv, onClickHandler);
     }
 
     @Override
-    public void onBindViewHolder(RecipeViewHolder holder, int position) {
+    public void onBindViewHolder(SimpleViewHolder holder, int position) {
         Recipe recipe = mRecipeList.get(position);
-        holder.bindViewHolder(recipe);
+        holder.bindViewHolder(recipe.getName());
 
     }
 
@@ -71,7 +68,7 @@ public class RecipeAdapter
     @Override
     public void onClick(int position) {
         Recipe recipe = mRecipeList.get(position);
-        Timber.d("TAPPED ON POSITION: %d", position);
+        Timber.d("Tapped on position: %d", position);
         mOnClickHandler.onClick(recipe);
     }
 }
