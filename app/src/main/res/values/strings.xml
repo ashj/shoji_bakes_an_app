@@ -2,4 +2,6 @@
     <string name="app_name">Baking App</string>
 
     <string name="tool_recipe_title">Recipe</string>
+
+    <string name="ingredients_list">Check ingredients list</string>
 </resources>

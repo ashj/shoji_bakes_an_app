@@ -1,25 +1,35 @@
 package com.example.shoji.bakingapp.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.shoji.bakingapp.R;
+import com.example.shoji.bakingapp.data.RecipeMasterListAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
 
 import timber.log.Timber;
 
-public class RecipeMasterListFragment extends Fragment {
+public class RecipeMasterListFragment extends Fragment
+    implements RecipeMasterListAdapter.OnClickListener {
 
     private Recipe mRecipe;
 
-    public RecipeMasterListFragment () {}
+    private RecipeMasterListAdapter mRecipeMasterListAdapter;
+    private RecyclerView mRecipeRecyclerView;
+
+    public RecipeMasterListFragment() {
+    }
 
     @Nullable
     @Override
@@ -32,15 +42,46 @@ public class RecipeMasterListFragment extends Fragment {
                 container,
                 attachToRoot);
 
-        TextView title = rootView.findViewById(R.id.fragment_recipe_master_list_recipe_name);
+        mRecipe = getRecipeFromActivity();
 
-        Recipe recipe = getRecipeFromActivity();
 
-        getActivity().setTitle(recipe.getName());
-        title.setText(recipe.getName());
 
-        Timber.d("onCreateView -- doing nothing for now");
+        createRecyclerView(rootView);
+
+
+
+
+
+        FragmentActivity activity = getActivity();
+        if (activity != null)
+            activity.setTitle(mRecipe.getName());
+
+
+
+
+
         return rootView;
+    }
+
+    private void createRecyclerView(View rootView) {
+        Timber.d("createRecyclerView");
+        Context context = getContext();
+
+        mRecipeMasterListAdapter =
+                new RecipeMasterListAdapter(context, this);
+        mRecipeMasterListAdapter.setRecipe(mRecipe);
+
+
+        mRecipeRecyclerView = rootView.findViewById(R.id.fragment_recipe_master_list_recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        mRecipeRecyclerView.setLayoutManager(linearLayoutManager);
+
+        mRecipeRecyclerView.setHasFixedSize(true);
+
+        mRecipeRecyclerView.setAdapter(mRecipeMasterListAdapter);
+
+        mRecipeMasterListAdapter.notifyDataSetChanged();
+
     }
 
     private Recipe getRecipeFromActivity() {
@@ -58,4 +99,8 @@ public class RecipeMasterListFragment extends Fragment {
         return intent.getParcelableExtra(RecipeMasterListActivity.EXTRA_RECIPE_DATA);
     }
 
+    @Override
+    public void onClick(Recipe recipe) {
+        Timber.d("Tapped !! %s", recipe.getName());
+    }
 }

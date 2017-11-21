@@ -23,7 +23,7 @@ public abstract class AbstractRecipesListAdapter
         void onClick(Recipe recipe);
     }
 
-    
+
     public AbstractRecipesListAdapter(OnClickListener onClickRecipeListener) {
         mOnClickHandler = onClickRecipeListener;
     }

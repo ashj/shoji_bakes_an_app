@@ -12,5 +12,7 @@
         android:id="@+id/recipe_adapter_title_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="55sp"
+        android:textAlignment="center"
         tools:text="@string/tool_recipe_title" />
 </LinearLayout>

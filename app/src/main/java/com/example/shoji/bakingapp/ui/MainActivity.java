@@ -61,6 +61,8 @@ public class MainActivity
         mRecipeListRecyclerView.setHasFixedSize(true);
 
         RecipesListAdapter.OnClickListener onClickRecipeHandler = this;
+
+
         mRecipeListAdapter = new RecipesListAdapter(onClickRecipeHandler);
         mRecipeListRecyclerView.setAdapter(mRecipeListAdapter);
 
