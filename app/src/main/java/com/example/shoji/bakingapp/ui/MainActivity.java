@@ -1,6 +1,7 @@
 package com.example.shoji.bakingapp.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
@@ -102,6 +103,11 @@ public class MainActivity
     @Override
     public void onClickRecipe(Recipe recipe) {
         Timber.d("TAPPED ON: %s", recipe.getName());
+
+        Intent intent = new Intent(this, RecipeMasterListActivity.class);
+        intent.putExtra(RecipeMasterListActivity.EXTRA_RECIPE_DATA, recipe);
+
+        startActivity(intent);
     }
 
 
