@@ -6,6 +6,7 @@ import com.example.shoji.bakingapp.BuildConfig;
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.backgroundtask.FetchRecipesListener;
 import com.example.shoji.bakingapp.utils.BakerUtils;
+import com.example.shoji.bakingapp.utils.RecipeJsonUtils;
 
 import timber.log.Timber;
 
@@ -35,5 +36,7 @@ public class MainActivity
     public void onFetchRecipesFinished(String recipeJsonString) {
         mRecipesJson = recipeJsonString;
         Timber.d(recipeJsonString);
+
+        RecipeJsonUtils.listRecipes(mRecipesJson);
     }
 }
