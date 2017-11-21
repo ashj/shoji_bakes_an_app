@@ -14,19 +14,18 @@ import timber.log.Timber;
 
 public class RecipeAdapter
         extends RecyclerView.Adapter<RecipeViewHolder>
-        implements RecipeViewHolder.OnClickRecipeListener {
+        implements RecipeViewHolder.OnClickListener {
 
     private ArrayList<Recipe> mRecipeList;
-    private OnClickRecipeListener mOnClickHandler;
+    private OnClickListener mOnClickHandler;
 
 
 
-
-    public interface OnClickRecipeListener {
-        void onClickRecipe(Recipe recipe);
+    public interface OnClickListener {
+        void onClick(Recipe recipe);
     }
 
-    public RecipeAdapter(OnClickRecipeListener onClickRecipeListener) {
+    public RecipeAdapter(OnClickListener onClickRecipeListener) {
         mOnClickHandler = onClickRecipeListener;
     }
 
@@ -40,7 +39,7 @@ public class RecipeAdapter
                 .from(parent.getContext())
                 .inflate(R.layout.recipe_adapter_item, parent, attachToRoot);
 
-        RecipeViewHolder.OnClickRecipeListener onClickHandler = this;
+        RecipeViewHolder.OnClickListener onClickHandler = this;
 
         return new RecipeViewHolder(itemView, onClickHandler);
     }
@@ -69,11 +68,10 @@ public class RecipeAdapter
     }
 
 
-
     @Override
-    public void onClickRecipe(int position) {
+    public void onClick(int position) {
         Recipe recipe = mRecipeList.get(position);
         Timber.d("TAPPED ON POSITION: %d", position);
-        mOnClickHandler.onClickRecipe(recipe);
+        mOnClickHandler.onClick(recipe);
     }
 }

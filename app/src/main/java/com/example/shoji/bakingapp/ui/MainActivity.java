@@ -22,7 +22,7 @@ import timber.log.Timber;
 public class MainActivity
         extends AppCompatActivityEx
         implements FetchRecipesListener.OnLoadFinishedListener,
-                    RecipeAdapter.OnClickRecipeListener {
+                    RecipeAdapter.OnClickListener {
     private static final String SAVE_INSTANCE_STATE_RECIPE_DATA = "recipe-data";
     private final static String SAVE_INSTANCE_STATE_LIST_POSITION = "list-position";
 
@@ -61,7 +61,7 @@ public class MainActivity
 
         mRecipeListRecyclerView.setHasFixedSize(true);
 
-        RecipeAdapter.OnClickRecipeListener onClickRecipeHandler = this;
+        RecipeAdapter.OnClickListener onClickRecipeHandler = this;
         mRecipeListAdapter = new RecipeAdapter(onClickRecipeHandler);
         mRecipeListRecyclerView.setAdapter(mRecipeListAdapter);
 
@@ -101,7 +101,7 @@ public class MainActivity
     }
 
     @Override
-    public void onClickRecipe(Recipe recipe) {
+    public void onClick(Recipe recipe) {
         Timber.d("TAPPED ON: %s", recipe.getName());
 
         Intent intent = new Intent(this, RecipeMasterListActivity.class);
