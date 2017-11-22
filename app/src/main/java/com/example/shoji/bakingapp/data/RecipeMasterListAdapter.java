@@ -1,6 +1,7 @@
 package com.example.shoji.bakingapp.data;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import java.util.ArrayList;
 import timber.log.Timber;
 
 public class RecipeMasterListAdapter
-        extends AbstractRecipesListAdapter  {
+        extends RecyclerView.Adapter<SimpleViewHolder>
+        implements SimpleViewHolder.OnClickListener
+{
     private static final int ITEMVIEWTYPE_RECIPE_INGREDIENT = 0;
     private static final int ITEMVIEWTYPE_RECIPE_STEP = 1;
     private static final int ITEMVIEWTYPE_UNKNOWN = -1;
@@ -21,10 +24,16 @@ public class RecipeMasterListAdapter
     private Context mContext;
     private Recipe mRecipe;
 
+    protected OnClickListener mOnClickHandler;
+
+
+    public interface OnClickListener {
+        void onClick(Recipe recipe);
+    }
 
     public RecipeMasterListAdapter(Context context,
                                    OnClickListener onClickRecipeListener) {
-        super(onClickRecipeListener);
+        mOnClickHandler = onClickRecipeListener;
         mContext = context;
     }
 
@@ -52,20 +61,26 @@ public class RecipeMasterListAdapter
                 holder.bindViewHolder(mContext.getString(R.string.ingredients_list));
                 break;
             case ITEMVIEWTYPE_RECIPE_STEP:
-                int offsetPosition = position - 1;
-                if(mRecipe.getIngredientList() == null || mRecipe.getIngredientList().size() == 0){
-                    offsetPosition = position;
-                }
+                int positionOffset = getPositionOffset(position);
                 Timber.d("onBindViewHolder, pos %d/ offset: %d, ITEMVIEWTYPE_RECIPE_STEP",
-                        position, offsetPosition);
+                        position, positionOffset);
 
-                holder.bindViewHolder(mRecipe.getStepList().get(offsetPosition).getShortDescription());
-                Timber.d(mRecipe.getStepList().get(offsetPosition).getShortDescription());
+                holder.bindViewHolder(mRecipe.getStepList().get(positionOffset).getShortDescription());
+                Timber.d(mRecipe.getStepList().get(positionOffset).getShortDescription());
                 break;
             default:
                 break;
         }
 
+    }
+
+
+    private int getPositionOffset(int position) {
+        int offsetPosition = position - 1;
+        if(mRecipe.getIngredientList() == null || mRecipe.getIngredientList().size() == 0){
+            offsetPosition = position;
+        }
+        return offsetPosition;
     }
 
     @Override
@@ -129,7 +144,20 @@ public class RecipeMasterListAdapter
 
     @Override
     public void onClick(int position) {
-        Timber.d("Tapped on recipe: %s", mRecipe.getName());
+
         mOnClickHandler.onClick(mRecipe);
+
+
+
+        switch (getItemViewType(position)) {
+            case ITEMVIEWTYPE_RECIPE_INGREDIENT:
+                Timber.d("Tapped on ingredient list: %d", position);
+                break;
+            case ITEMVIEWTYPE_RECIPE_STEP:
+                Timber.d("Tapped on step list: %d", position);
+                int positionOffset = getPositionOffset(position);
+                Timber.d("PositionOffset: %d", positionOffset);
+                break;
+        }
     }
 }
