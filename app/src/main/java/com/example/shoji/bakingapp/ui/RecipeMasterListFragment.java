@@ -91,10 +91,10 @@ public class RecipeMasterListFragment extends Fragment
         if(intent == null)
             return null;
 
-        if(!intent.hasExtra(RecipeMasterListActivity.EXTRA_RECIPE_DATA))
+        if(!intent.hasExtra(RecipeActivity.EXTRA_RECIPE_DATA))
             return null;
 
-        return intent.getParcelableExtra(RecipeMasterListActivity.EXTRA_RECIPE_DATA);
+        return intent.getParcelableExtra(RecipeActivity.EXTRA_RECIPE_DATA);
     }
 
     @Override

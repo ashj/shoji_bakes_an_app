@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RecipeMasterListActivity"></activity>
+        <activity android:name=".ui.RecipeActivity"></activity>
     </application>
 
 </manifest>

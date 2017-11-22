@@ -105,8 +105,8 @@ public class MainActivity
     public void onClick(Recipe recipe) {
         Timber.d("TAPPED ON: %s", recipe.getName());
 
-        Intent intent = new Intent(this, RecipeMasterListActivity.class);
-        intent.putExtra(RecipeMasterListActivity.EXTRA_RECIPE_DATA, recipe);
+        Intent intent = new Intent(this, RecipeActivity.class);
+        intent.putExtra(RecipeActivity.EXTRA_RECIPE_DATA, recipe);
 
         startActivity(intent);
     }
