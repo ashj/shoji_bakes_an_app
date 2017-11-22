@@ -32,6 +32,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.shoji.bakingapp.ui.RecipeActivity" />
         </activity>
+        <activity android:name=".ui.RecipeStepActivity"
+            android:parentActivityName="com.example.shoji.bakingapp.ui.RecipeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.shoji.bakingapp.ui.RecipeActivity" />
+        </activity>
     </application>
 
 </manifest>

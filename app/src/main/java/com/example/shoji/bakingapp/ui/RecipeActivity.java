@@ -66,6 +66,11 @@ public class RecipeActivity extends AppCompatActivity
 
     @Override
     public void onClickStep(int position) {
+        //TODO - do steps
+        Intent intent = new Intent(this, RecipeIngredientActivity.class);
+        intent.putExtra(EXTRA_RECIPE_DATA, mRecipe);
+        startActivity(intent);
+
         Timber.d("Process onClickStep at pos: %d", position);
 
     }
