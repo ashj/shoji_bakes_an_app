@@ -8,11 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.data.RecipeMasterListAdapter;
@@ -100,7 +98,12 @@ public class RecipeMasterListFragment extends Fragment
     }
 
     @Override
-    public void onClick(Recipe recipe) {
-        Timber.d("Tapped !! %s", recipe.getName());
+    public void onClickIngredient() {
+        Timber.d("Process onClickIngredient");
+    }
+
+    @Override
+    public void onClickStep(int position) {
+        Timber.d("Process onClickStep at pos: %d", position);
     }
 }

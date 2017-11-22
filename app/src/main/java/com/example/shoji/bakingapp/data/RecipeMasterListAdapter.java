@@ -28,7 +28,8 @@ public class RecipeMasterListAdapter
 
 
     public interface OnClickListener {
-        void onClick(Recipe recipe);
+        void onClickIngredient();
+        void onClickStep(int position);
     }
 
     public RecipeMasterListAdapter(Context context,
@@ -145,18 +146,15 @@ public class RecipeMasterListAdapter
     @Override
     public void onClick(int position) {
 
-        mOnClickHandler.onClick(mRecipe);
-
-
-
         switch (getItemViewType(position)) {
             case ITEMVIEWTYPE_RECIPE_INGREDIENT:
                 Timber.d("Tapped on ingredient list: %d", position);
+                mOnClickHandler.onClickIngredient();
                 break;
             case ITEMVIEWTYPE_RECIPE_STEP:
-                Timber.d("Tapped on step list: %d", position);
                 int positionOffset = getPositionOffset(position);
-                Timber.d("PositionOffset: %d", positionOffset);
+                Timber.d("Tapped on step list: %d - offset: %d", position, positionOffset);
+                mOnClickHandler.onClickStep(positionOffset);
                 break;
         }
     }
