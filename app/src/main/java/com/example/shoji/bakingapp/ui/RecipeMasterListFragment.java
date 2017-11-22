@@ -1,5 +1,6 @@
 package com.example.shoji.bakingapp.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,14 +19,16 @@ import com.example.shoji.bakingapp.pojo.Recipe;
 
 import timber.log.Timber;
 
-public class RecipeMasterListFragment extends Fragment
-    implements RecipeMasterListAdapter.OnClickListener {
+public class RecipeMasterListFragment extends Fragment {
 
     private Recipe mRecipe;
 
     private RecipeMasterListAdapter mRecipeMasterListAdapter;
-    //private RecipeMasterListAdapter.OnClickListener mOnClickHandler;
+    private RecipeMasterListAdapter.OnClickListener mOnClickHandler;
     private RecyclerView mRecipeRecyclerView;
+
+
+
 
     public RecipeMasterListFragment() {}
 
@@ -67,7 +70,7 @@ public class RecipeMasterListFragment extends Fragment
         Context context = getContext();
 
         mRecipeMasterListAdapter =
-                new RecipeMasterListAdapter(context, this);
+                new RecipeMasterListAdapter(context, mOnClickHandler);
         mRecipeMasterListAdapter.setRecipe(mRecipe);
 
 
@@ -98,22 +101,16 @@ public class RecipeMasterListFragment extends Fragment
         return intent.getParcelableExtra(RecipeActivity.EXTRA_RECIPE_DATA);
     }
 
-    @Override
-    public void onClickIngredient() {
-        Timber.d("Process onClickIngredient");
-        Intent intent = new Intent(getActivity(), RecipeIngredientActivity.class);
-        intent.putExtra(RecipeActivity.EXTRA_RECIPE_DATA, mRecipe);
-        startActivity(intent);
-        //mOnClickHandler.onClickIngredient();
-    }
 
     @Override
-    public void onClickStep(int position) {
-        Timber.d("Process onClickStep at pos: %d", position);
-        //mOnClickHandler.onClickStep(position);
-    }
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
-    public void setOnClickListener(RecipeMasterListAdapter.OnClickListener handler) {
-        //mOnClickHandler = handler;
+        try {
+            mOnClickHandler = (RecipeMasterListAdapter.OnClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnImageClickListener");
+        }
     }
 }

@@ -14,9 +14,9 @@ import com.example.shoji.bakingapp.pojo.Recipe;
 
 import timber.log.Timber;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements RecipeMasterListAdapter.OnClickListener {
     public static final String EXTRA_RECIPE_DATA = "extra-recipe-data";
-    //public static final String EXTRA_FRAGMENT_LISTENER = "extra-fragment-listener";
+
     private boolean mIsTabletMode;
 
     private Context mContext;
@@ -53,4 +53,17 @@ public class RecipeActivity extends AppCompatActivity {
         return intent.getParcelableExtra(RecipeActivity.EXTRA_RECIPE_DATA);
     }
 
- }
+    @Override
+    public void onClickIngredient() {
+        Intent intent = new Intent(this, RecipeIngredientActivity.class);
+        intent.putExtra(EXTRA_RECIPE_DATA, mRecipe);
+        startActivity(intent);
+        Timber.d("Process onClickIngredient");
+    }
+
+    @Override
+    public void onClickStep(int position) {
+        Timber.d("Process onClickStep at pos: %d", position);
+
+    }
+}
