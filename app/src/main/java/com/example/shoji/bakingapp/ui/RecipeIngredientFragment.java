@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.shoji.bakingapp.R;
+import com.example.shoji.bakingapp.data.RecipeIngredientsAdapter;
+import com.example.shoji.bakingapp.data.RecipeMasterListAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
 
 import timber.log.Timber;
@@ -22,7 +24,7 @@ public class RecipeIngredientFragment extends Fragment {
 
     private Recipe mRecipe;
 
-    //private RecipeMasterListAdapter mRecipeMasterListAdapter;
+    private RecipeIngredientsAdapter mRecipeIngredientsAdapter;
     private RecyclerView mIngredientRecyclerView;
 
     public RecipeIngredientFragment() {
@@ -55,20 +57,20 @@ public class RecipeIngredientFragment extends Fragment {
         Timber.d("createRecyclerView");
         Context context = getContext();
 
-//        //mRecipeMasterListAdapter =
-//                new RecipeMasterListAdapter(context, this);
-//        mRecipeMasterListAdapter.setRecipe(mRecipe);
-//
-//
+        mRecipeIngredientsAdapter =
+                new RecipeIngredientsAdapter();
+        mRecipeIngredientsAdapter.setRecipe(mRecipe);
+
+
         mIngredientRecyclerView = rootView.findViewById(R.id.fragment_recipe_ingredient_list_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         mIngredientRecyclerView.setLayoutManager(linearLayoutManager);
 
         mIngredientRecyclerView.setHasFixedSize(true);
 
-//        mIngredientRecyclerView.setAdapter(mRecipeMasterListAdapter);
-//
-//        mRecipeMasterListAdapter.notifyDataSetChanged();
+        mIngredientRecyclerView.setAdapter(mRecipeIngredientsAdapter);
+
+        mRecipeIngredientsAdapter.notifyDataSetChanged();
 
     }
 

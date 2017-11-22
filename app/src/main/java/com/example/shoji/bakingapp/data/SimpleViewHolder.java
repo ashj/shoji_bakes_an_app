@@ -43,6 +43,7 @@ public class SimpleViewHolder extends RecyclerView.ViewHolder
     public void onClick(View view) {
         int position = getAdapterPosition();
         Timber.d("TAPPED ON POSITION (holder): %d", position);
-        mOnClickHandler.onClick(position);
+        if(mOnClickHandler != null)
+            mOnClickHandler.onClick(position);
     }
 }
