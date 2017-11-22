@@ -1,9 +1,11 @@
 package com.example.shoji.bakingapp.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +14,8 @@ import android.widget.FrameLayout;
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.data.RecipeMasterListAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
+import com.example.shoji.bakingapp.pojo.RecipeIngredient;
+import com.example.shoji.bakingapp.pojo.RecipeStep;
 
 import timber.log.Timber;
 
@@ -58,20 +62,45 @@ public class RecipeActivity extends AppCompatActivity
 
     @Override
     public void onClickIngredient() {
-        Intent intent = new Intent(this, RecipeIngredientActivity.class);
-        intent.putExtra(EXTRA_RECIPE_DATA, mRecipe);
-        startActivity(intent);
         Timber.d("Process onClickIngredient");
+        if(mIsTabletMode) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            RecipeIngredientFragment ingredientFragment = new RecipeIngredientFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.activity_recipe_content_body, ingredientFragment)
+                    .commit();
+
+        } else {
+            Intent intent = new Intent(this, RecipeIngredientActivity.class);
+            intent.putExtra(EXTRA_RECIPE_DATA, mRecipe);
+
+            startActivity(intent);
+        }
+
     }
 
     @Override
     public void onClickStep(int position) {
         //TODO - do steps
-        Intent intent = new Intent(this, RecipeIngredientActivity.class);
-        intent.putExtra(EXTRA_RECIPE_DATA, mRecipe);
-        startActivity(intent);
+        Bundle args  = new Bundle();
+        args.putInt(RecipeStepActivity.EXTRA_STEP_NUMBER, position);
 
-        Timber.d("Process onClickStep at pos: %d", position);
+        if(mIsTabletMode) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            RecipeStepFragment stepFragment = new RecipeStepFragment();
+            stepFragment.setArguments(args);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.activity_recipe_content_body, stepFragment)
+                    .commit();
+
+        } else {
+            Intent intent = new Intent(this, RecipeStepActivity.class);
+            intent.putExtra(EXTRA_RECIPE_DATA, mRecipe);
+            intent.putExtra(RecipeStepActivity.EXTRA_STEP_NUMBER, args);
+            startActivity(intent);
+        }
 
     }
 

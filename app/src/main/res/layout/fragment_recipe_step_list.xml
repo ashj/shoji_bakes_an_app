@@ -1,8 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:id="@+id/fragment_recipe_step_list_recycler_view"
+    android:id="@+id/fragment_recipe_step_constraint_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-</android.support.v7.widget.RecyclerView>
+    android:layout_height="match_parent">
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/fragment_recipe_step_guideline_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.45"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/fragment_recipe_step_guideline_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7"/>
+
+    <TextView
+        android:id="@+id/fragment_recipe_step_media_player"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_recipe_step_guideline_1"
+        tools:text="@string/tool_recipe_media_player_view"
+        android:textColor="@android:color/white"
+        android:background="@android:color/black"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/fragment_recipe_step_long_description"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:textSize="44sp"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_recipe_step_guideline_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_recipe_step_guideline_1"
+        tools:text="@string/tool_recipe_long_description"
+        android:background="@android:color/darker_gray"
+        />
+
+</android.support.constraint.ConstraintLayout>

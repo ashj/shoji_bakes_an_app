@@ -11,20 +11,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.data.RecipeIngredientsAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
+import com.example.shoji.bakingapp.pojo.RecipeStep;
+
+import java.sql.Time;
 
 import timber.log.Timber;
 
 
 public class RecipeStepFragment extends Fragment {
 
+    private static final int POSITION_INVALID = -1;
+
+    private int mStepPosition;
+
     private Recipe mRecipe;
 
-    private RecipeIngredientsAdapter mRecipeStepAdapter;
-    private RecyclerView mStepRecyclerView;
+    private TextView mLongDescription;
+
 
     public RecipeStepFragment() {
     }
@@ -42,7 +50,9 @@ public class RecipeStepFragment extends Fragment {
 
         mRecipe = getRecipeFromActivity();
 
-        createRecyclerView(rootView);
+        createViews(rootView);
+
+
 
         FragmentActivity activity = getActivity();
         if (activity != null)
@@ -52,24 +62,20 @@ public class RecipeStepFragment extends Fragment {
     }
 
 
-    private void createRecyclerView(View rootView) {
-        Timber.d("createRecyclerView");
-        Context context = getContext();
-
-        mRecipeStepAdapter =
-                new RecipeIngredientsAdapter();
-        mRecipeStepAdapter.setRecipe(mRecipe);
+    private void createViews(View rootView) {
+        Timber.d("createViews");
 
 
-        mStepRecyclerView = rootView.findViewById(R.id.fragment_recipe_step_list_recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        mStepRecyclerView.setLayoutManager(linearLayoutManager);
+        mStepPosition = getStepNumberFromActivity();
+        if(mStepPosition == POSITION_INVALID) {
+            Timber.d("No position extra from activity. Try from getArguments");
+            mStepPosition = getStepNumberFromBundle(getArguments());
+        }
+        Timber.d("Got position -- %d", mStepPosition);
 
-        mStepRecyclerView.setHasFixedSize(true);
 
-        mStepRecyclerView.setAdapter(mRecipeStepAdapter);
-
-        mRecipeStepAdapter.notifyDataSetChanged();
+        mLongDescription = rootView.findViewById(R.id.fragment_recipe_step_long_description);
+        mLongDescription.setText(mRecipe.getStepList().get(mStepPosition).getLongDescription());
 
     }
 
@@ -86,5 +92,31 @@ public class RecipeStepFragment extends Fragment {
             return null;
 
         return intent.getParcelableExtra(RecipeActivity.EXTRA_RECIPE_DATA);
+    }
+
+    private int getStepNumberFromActivity() {
+        String extra_key = RecipeStepActivity.EXTRA_STEP_NUMBER;
+        FragmentActivity activity = getActivity();
+        int position = POSITION_INVALID;
+        if(activity != null) {
+            Intent intent = activity.getIntent();
+            if(intent.hasExtra(extra_key)) {
+                Bundle args = intent.getBundleExtra(extra_key);
+                position = getStepNumberFromBundle(args);
+                Timber.d("getStepNumberFromActivity -- %d", position);
+            }
+        }
+
+        return position;
+    }
+
+    private int getStepNumberFromBundle(Bundle args) {
+        String extra_key = RecipeStepActivity.EXTRA_STEP_NUMBER;
+        int position = POSITION_INVALID;
+        if(args != null && args.containsKey(extra_key)) {
+            position = args.getInt(extra_key);
+            Timber.d("getStepNumberFromBundle -- %d", position);
+        }
+        return position;
     }
 }

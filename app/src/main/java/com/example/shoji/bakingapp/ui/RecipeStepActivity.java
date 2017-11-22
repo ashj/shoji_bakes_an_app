@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import com.example.shoji.bakingapp.R;
 
 public class RecipeStepActivity extends AppCompatActivity {
+    public static final String EXTRA_STEP_NUMBER = "extra-step-number";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

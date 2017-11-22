@@ -2,6 +2,8 @@
     <string name="app_name">Baking App</string>
 
     <string name="tool_recipe_title">Recipe</string>
+    <string name="tool_recipe_media_player_view">(MEDIA PLAYER)</string>
+    <string name="tool_recipe_long_description">Lorem ipsum</string>
 
     <string name="ingredients_list">Check ingredients list</string>
 </resources>
