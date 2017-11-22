@@ -20,8 +20,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RecipeActivity" />
-        <activity android:name=".ui.RecipeIngredientActivity"></activity>
+        <activity android:name=".ui.RecipeActivity"
+            android:parentActivityName="com.example.shoji.bakingapp.ui.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.shoji.bakingapp.ui.MainActivity" />
+        </activity>
+        <activity android:name=".ui.RecipeIngredientActivity"
+            android:parentActivityName="com.example.shoji.bakingapp.ui.RecipeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.shoji.bakingapp.ui.RecipeActivity" />
+        </activity>
     </application>
 
 </manifest>

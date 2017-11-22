@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.shoji.bakingapp.R;
@@ -14,7 +15,8 @@ import com.example.shoji.bakingapp.pojo.Recipe;
 
 import timber.log.Timber;
 
-public class RecipeActivity extends AppCompatActivity implements RecipeMasterListAdapter.OnClickListener {
+public class RecipeActivity extends AppCompatActivity
+        implements RecipeMasterListAdapter.OnClickListener {
     public static final String EXTRA_RECIPE_DATA = "extra-recipe-data";
 
     private boolean mIsTabletMode;
@@ -27,6 +29,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeMasterLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
+
         mContext = this;
 
         mIsTabletMode = isTabletMode();
@@ -65,5 +68,16 @@ public class RecipeActivity extends AppCompatActivity implements RecipeMasterLis
     public void onClickStep(int position) {
         Timber.d("Process onClickStep at pos: %d", position);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
