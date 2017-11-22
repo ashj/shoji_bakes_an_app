@@ -13,22 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.shoji.bakingapp.R;
-import com.example.shoji.bakingapp.data.RecipeMasterListAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
 
 import timber.log.Timber;
 
-public class RecipeMasterListFragment extends Fragment
-    implements RecipeMasterListAdapter.OnClickListener {
+
+public class RecipeIngredientFragment extends Fragment {
 
     private Recipe mRecipe;
 
-    private RecipeMasterListAdapter mRecipeMasterListAdapter;
-    //private RecipeMasterListAdapter.OnClickListener mOnClickHandler;
-    private RecyclerView mRecipeRecyclerView;
+    //private RecipeMasterListAdapter mRecipeMasterListAdapter;
+    private RecyclerView mIngredientRecyclerView;
 
-    public RecipeMasterListFragment() {}
-
+    public RecipeIngredientFragment() {
+    }
 
     @Nullable
     @Override
@@ -37,49 +35,40 @@ public class RecipeMasterListFragment extends Fragment
                              @Nullable Bundle savedInstanceState) {
         boolean attachToRoot = false;
         View rootView = inflater.inflate(
-                R.layout.fragment_recipe_master_list,
+                R.layout.fragment_recipe_ingredient_list,
                 container,
                 attachToRoot);
 
         mRecipe = getRecipeFromActivity();
 
-
-
         createRecyclerView(rootView);
-
-
-
-
 
         FragmentActivity activity = getActivity();
         if (activity != null)
             activity.setTitle(mRecipe.getName());
 
-
-
-
-
         return rootView;
     }
+
 
     private void createRecyclerView(View rootView) {
         Timber.d("createRecyclerView");
         Context context = getContext();
 
-        mRecipeMasterListAdapter =
-                new RecipeMasterListAdapter(context, this);
-        mRecipeMasterListAdapter.setRecipe(mRecipe);
-
-
-        mRecipeRecyclerView = rootView.findViewById(R.id.fragment_recipe_master_list_recycler_view);
+//        //mRecipeMasterListAdapter =
+//                new RecipeMasterListAdapter(context, this);
+//        mRecipeMasterListAdapter.setRecipe(mRecipe);
+//
+//
+        mIngredientRecyclerView = rootView.findViewById(R.id.fragment_recipe_ingredient_list_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        mRecipeRecyclerView.setLayoutManager(linearLayoutManager);
+        mIngredientRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mRecipeRecyclerView.setHasFixedSize(true);
+        mIngredientRecyclerView.setHasFixedSize(true);
 
-        mRecipeRecyclerView.setAdapter(mRecipeMasterListAdapter);
-
-        mRecipeMasterListAdapter.notifyDataSetChanged();
+//        mIngredientRecyclerView.setAdapter(mRecipeMasterListAdapter);
+//
+//        mRecipeMasterListAdapter.notifyDataSetChanged();
 
     }
 
@@ -96,24 +85,5 @@ public class RecipeMasterListFragment extends Fragment
             return null;
 
         return intent.getParcelableExtra(RecipeActivity.EXTRA_RECIPE_DATA);
-    }
-
-    @Override
-    public void onClickIngredient() {
-        Timber.d("Process onClickIngredient");
-        Intent intent = new Intent(getActivity(), RecipeIngredientActivity.class);
-        intent.putExtra(RecipeActivity.EXTRA_RECIPE_DATA, mRecipe);
-        startActivity(intent);
-        //mOnClickHandler.onClickIngredient();
-    }
-
-    @Override
-    public void onClickStep(int position) {
-        Timber.d("Process onClickStep at pos: %d", position);
-        //mOnClickHandler.onClickStep(position);
-    }
-
-    public void setOnClickListener(RecipeMasterListAdapter.OnClickListener handler) {
-        //mOnClickHandler = handler;
     }
 }
