@@ -7,5 +7,8 @@
 
     <string name="ingredients_list">Check ingredients list</string>
 
+    <string name="media_player_notification_play">Play</string>
+    <string name="media_player_notification_pause">Pause</string>
+
     <string name="error_no_network_short">No Internet connectivity</string>
 </resources>

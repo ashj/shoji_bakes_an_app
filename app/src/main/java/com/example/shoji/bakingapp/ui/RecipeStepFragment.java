@@ -1,5 +1,7 @@
 package com.example.shoji.bakingapp.ui;
 
+import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +9,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.media.session.MediaButtonReceiver;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +79,11 @@ public class RecipeStepFragment extends Fragment {
     private void createMediaPlayerView(View rootView) {
         Context context = getContext();
         mExoPlayerView = rootView.findViewById(R.id.fragment_recipe_step_media_player);
-        mBakerPlayer = new BakerPlayer(context, mExoPlayerView);
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Activity.NOTIFICATION_SERVICE);
+
+        mBakerPlayer = new BakerPlayer(context, mExoPlayerView, notificationManager);
+        mBakerPlayer.setNotificationTitle(mRecipe.getName());
+        mBakerPlayer.setNotificationText(mRecipe.getStepList().get(mStepPosition).getShortDescription());
 
 
         String urlString = mRecipe.getStepList().get(mStepPosition).getVideoUrl();
@@ -148,5 +157,15 @@ public class RecipeStepFragment extends Fragment {
         mBakerPlayer.releasePlayer();
         mBakerPlayer.mediaSessionSetActive(false);
     }
+
+
+
+
+
+
+
+
+
+
 
 }

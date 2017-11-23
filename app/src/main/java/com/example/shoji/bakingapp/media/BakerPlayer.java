@@ -1,10 +1,18 @@
 package com.example.shoji.bakingapp.media;
 
+import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.media.session.MediaSession;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
+import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.NotificationCompat;
 
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.ui.RecipeStepFragment;
@@ -26,6 +34,8 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import timber.log.Timber;
+
 
 public class BakerPlayer
     implements ExoPlayer.EventListener {
@@ -34,11 +44,20 @@ public class BakerPlayer
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mExoPlayerView;
     private PlaybackStateCompat.Builder mStateBuilder;
-    private MediaSessionCompat mMediaSession;
+    private static MediaSessionCompat sMediaSession;
 
-    public BakerPlayer(Context context, SimpleExoPlayerView simpleExoPlayerView) {
+    private NotificationManager mNotificationManager;
+
+    private static final int NOFITICATION_MAX_LENGTH = 30;
+    private String mNotificationTitle;
+    private String mNotificationText;
+
+    public BakerPlayer(Context context,
+                       SimpleExoPlayerView simpleExoPlayerView,
+                       NotificationManager notificationManager) {
         mContext = context;
         mExoPlayerView = simpleExoPlayerView;
+        mNotificationManager = notificationManager;
 
         initiateMediaSession();
     }
@@ -47,16 +66,16 @@ public class BakerPlayer
         /* Step 1 - create a MediaSessionCompat object*/
         Context context = mContext;
         String tag = RecipeStepFragment.class.getSimpleName();
-        mMediaSession = new MediaSessionCompat(context, tag);
+        sMediaSession = new MediaSessionCompat(context, tag);
 
         /* Step 2 - set the flags*/
         int flags = MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                 MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS;
-        mMediaSession.setFlags(flags);
+        sMediaSession.setFlags(flags);
 
         /* Step 3 - set an optional MediaButtonReceiver component*/
         PendingIntent mediaButtonReceiver = null;
-        mMediaSession.setMediaButtonReceiver(mediaButtonReceiver);
+        sMediaSession.setMediaButtonReceiver(mediaButtonReceiver);
 
         /* Step 4 - set available actions and initial state*/
         long actions = PlaybackStateCompat.ACTION_PLAY |
@@ -66,14 +85,14 @@ public class BakerPlayer
                 PlaybackStateCompat.ACTION_FAST_FORWARD |
                 PlaybackStateCompat.ACTION_REWIND;
         mStateBuilder = new PlaybackStateCompat.Builder().setActions(actions);
-        mMediaSession.setPlaybackState(mStateBuilder.build());
+        sMediaSession.setPlaybackState(mStateBuilder.build());
 
         /* Step 5 - set the callbacks*/
         MediaSessionCompat.Callback callback = new MySessionCallback();
-        mMediaSession.setCallback(callback);
+        sMediaSession.setCallback(callback);
 
         /* Step 6 - start the session */
-        mMediaSession.setActive(true);
+        sMediaSession.setActive(true);
     }
 
     public void initializePlayer(Uri mediaUri) {
@@ -121,13 +140,15 @@ public class BakerPlayer
     }
 
     public void releasePlayer() {
+        mNotificationManager.cancelAll();
+
         mExoPlayer.stop();
         mExoPlayer.release();
         mExoPlayer = null;
     }
 
     public void mediaSessionSetActive(boolean state) {
-        mMediaSession.setActive(state);
+        sMediaSession.setActive(state);
     }
 
     // ExoPlayer Event Listeners
@@ -154,7 +175,10 @@ public class BakerPlayer
             mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
                     mExoPlayer.getCurrentPosition(), playbackSpeed);
         }
-        mMediaSession.setPlaybackState(mStateBuilder.build());
+        PlaybackStateCompat state = mStateBuilder.build();
+        sMediaSession.setPlaybackState(state);
+
+        showNotification(mContext, mNotificationManager, sMediaSession, state);
 
     }
 
@@ -164,6 +188,84 @@ public class BakerPlayer
 
     @Override
     public void onPositionDiscontinuity() {
+    }
+
+
+    public static class MediaReceiver extends BroadcastReceiver {
+
+        public MediaReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Timber.d("Received broadcast");
+            MediaButtonReceiver.handleIntent(sMediaSession, intent);
+        }
+    }
+
+    private String trimmNotificationString(String string) {
+        if(string.length() > NOFITICATION_MAX_LENGTH) {
+            return string.substring(0, NOFITICATION_MAX_LENGTH);
+        }
+        return string;
+    }
+
+    public void setNotificationTitle(String title) {
+        mNotificationTitle = trimmNotificationString(title);
+    }
+
+    public void setNotificationText(String text) {
+        mNotificationText = trimmNotificationString(text);
+    }
+
+    private void showNotification(Context context,
+                                  NotificationManager notificationManager,
+                                  MediaSessionCompat mediaSession,
+                                  PlaybackStateCompat state) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+Timber.d("Part 1");
+        int icon;
+        String play_pause;
+        if(state.getState() == PlaybackStateCompat.STATE_PLAYING){
+            icon = R.drawable.exo_controls_pause;
+            play_pause = mContext.getString(R.string.media_player_notification_pause);
+
+        } else {
+            icon = R.drawable.exo_controls_play;
+            play_pause = mContext.getString(R.string.media_player_notification_play);
+        }
+
+        Timber.d("Part 2");
+        NotificationCompat.Action playPauseAction = new NotificationCompat.Action(
+                icon, play_pause,
+                MediaButtonReceiver.buildMediaButtonPendingIntent(context,
+                        PlaybackStateCompat.ACTION_PLAY_PAUSE));
+
+        NotificationCompat.Action restartAction = new android.support.v4.app.NotificationCompat
+                //.Action(R.drawable.exo_controls_previous, getString(R.string.restart),
+                .Action(R.drawable.exo_controls_previous, "restart",
+                MediaButtonReceiver.buildMediaButtonPendingIntent
+                        (context, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
+
+        //PendingIntent contentPendingIntent = PendingIntent.getActivity
+        //        (this, 0, new Intent(this, QuizActivity.class), 0);
+        Timber.d("Part 3");
+        builder
+                .setContentTitle(mNotificationTitle)
+                .setContentText(mNotificationText)
+                //.setContentIntent(contentPendingIntent)
+                .setSmallIcon(R.drawable.ic_music_note)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .addAction(restartAction)
+                .addAction(playPauseAction)
+                .setStyle(new NotificationCompat.MediaStyle()
+                        .setMediaSession(sMediaSession.getSessionToken())
+                        .setShowActionsInCompactView(0,1));
+
+
+        //NotificationManager mNotificationManager = (NotificationManager) getActivity().getSystemService(Activity.NOTIFICATION_SERVICE);
+        Timber.d("Part 4");
+        notificationManager.notify(0, builder.build());
     }
 
 }
