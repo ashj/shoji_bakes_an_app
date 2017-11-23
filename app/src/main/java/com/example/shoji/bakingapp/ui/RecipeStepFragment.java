@@ -27,6 +27,7 @@ public class RecipeStepFragment extends Fragment {
 
     private static final int POSITION_INVALID = -1;
 
+    private boolean mIsPhoneLandscape;
     private int mStepPosition;
 
     private Recipe mRecipe;
@@ -35,7 +36,8 @@ public class RecipeStepFragment extends Fragment {
     private BakerPlayer mBakerPlayer;
 
     private TextView mLongDescription;
-
+    private TextView mPreviousStepButton;
+    private TextView mNextStepButton;
 
     public RecipeStepFragment() {
     }
@@ -79,14 +81,11 @@ public class RecipeStepFragment extends Fragment {
         Context context = getContext();
 
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Activity.NOTIFICATION_SERVICE);
+        mExoPlayerView = rootView.findViewById(R.id.fragment_recipe_step_media_player);
 
-        mBakerPlayer = new BakerPlayer(context, notificationManager);
+        mBakerPlayer = new BakerPlayer(context, mExoPlayerView, notificationManager);
         mBakerPlayer.setNotificationTitle(mRecipe.getName());
         mBakerPlayer.setNotificationText(mRecipe.getStepList().get(mStepPosition).getShortDescription());
-
-
-        mExoPlayerView = rootView.findViewById(R.id.fragment_recipe_step_media_player);
-        mBakerPlayer.setPlayerView(mExoPlayerView);
 
 
         String urlString = mRecipe.getStepList().get(mStepPosition).getVideoUrl();
@@ -101,10 +100,19 @@ public class RecipeStepFragment extends Fragment {
     private void createGeneralViews(View rootView) {
         Timber.d("createViews");
 
+        /* fragment_recipe_step_long_description is not defined in phone landscape layout */
         mLongDescription = rootView.findViewById(R.id.fragment_recipe_step_long_description);
-        if(mLongDescription != null) {
+        mIsPhoneLandscape = mLongDescription == null;
+
+
+        if(!mIsPhoneLandscape) {
             mLongDescription.setText(mRecipe.getStepList().get(mStepPosition).getLongDescription());
+
+            mPreviousStepButton = rootView.findViewById(R.id.navbutton_recipe_previous_button);
+            mNextStepButton = rootView.findViewById(R.id.navbutton_recipe_next_button);
         }
+
+        Timber.d("NOT NULL?: mPreviousStepButton: %b, mNextStepButton: %b", (mPreviousStepButton !=null), (mNextStepButton!=null));
 
     }
 
@@ -177,6 +185,7 @@ public class RecipeStepFragment extends Fragment {
         if(state != null) {
             long position = state.getLong(SAVE_INSTANCE_STATE_PLAYER_POSITION, 0);
             Timber.d("restoreInstanceState - position: %d", position);
+            if(position != BakerPlayer.INVALID_POSITION)
             mBakerPlayer.onRestoreInstanceState(position);
         }
     }

@@ -10,6 +10,7 @@ import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
+import android.view.View;
 
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.ui.RecipeStepFragment;
@@ -36,9 +37,12 @@ import timber.log.Timber;
 
 public class BakerPlayer
     implements ExoPlayer.EventListener {
+    public static final long INVALID_POSITION = -1;
+
     private Context mContext;
 
     private SimpleExoPlayer mExoPlayer;
+    private SimpleExoPlayerView mExoPlayerView;
     private PlaybackStateCompat.Builder mStateBuilder;
     private static MediaSessionCompat sMediaSession;
 
@@ -49,9 +53,11 @@ public class BakerPlayer
     private String mNotificationText;
 
     public BakerPlayer(Context context,
+                       SimpleExoPlayerView simpleExoPlayerView,
                        NotificationManager notificationManager) {
         mContext = context;
         mNotificationManager = notificationManager;
+        mExoPlayerView = simpleExoPlayerView;
         initiateExoPlayer();
         initiateMediaSession();
     }
@@ -66,7 +72,7 @@ public class BakerPlayer
                 trackSelector,
                 loadControl);
 
-
+        mExoPlayerView.setPlayer(mExoPlayer);
         ExoPlayer.EventListener eventHandler = this;
         mExoPlayer.addListener(eventHandler);
     }
@@ -141,10 +147,11 @@ public class BakerPlayer
 
     public void releasePlayer() {
         mNotificationManager.cancelAll();
-
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+        if(mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
 
     public void mediaSessionSetActive(boolean state) {
@@ -183,7 +190,25 @@ public class BakerPlayer
     }
 
     @Override
+    // https://stackoverflow.com/questions/42948036/how-to-catch-all-errors-for-exoplayer
     public void onPlayerError(ExoPlaybackException error) {
+        switch (error.type) {
+            case ExoPlaybackException.TYPE_SOURCE:
+                Timber.e("TYPE_SOURCE: %s", error.getSourceException().getMessage());
+                break;
+
+            case ExoPlaybackException.TYPE_RENDERER:
+                Timber.e("TYPE_RENDERER: %s", error.getRendererException().getMessage());
+                break;
+
+            case ExoPlaybackException.TYPE_UNEXPECTED:
+                Timber.e("TYPE_UNEXPECTED: %s", error.getUnexpectedException().getMessage());
+                break;
+        }
+        /* disable player controller and release it */
+        mExoPlayerView.setUseController(false);
+        //mExoPlayerView.setVisibility(View.GONE);
+        releasePlayer();
     }
 
     @Override
@@ -256,8 +281,9 @@ public class BakerPlayer
     }
 
     public long onSaveInstanceState() {
-
-        return mExoPlayer.getCurrentPosition();
+        if(mExoPlayer != null)
+            return mExoPlayer.getCurrentPosition();
+        return INVALID_POSITION;
     }
     public void onRestoreInstanceState(long position) {
 
@@ -265,7 +291,4 @@ public class BakerPlayer
 
     }
 
-    public void setPlayerView(SimpleExoPlayerView exoPlayerView) {
-        exoPlayerView.setPlayer(mExoPlayer);
-    }
 }
