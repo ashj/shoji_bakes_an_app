@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import com.example.shoji.bakingapp.backgroundtask.FetchRecipesListener;
 import com.example.shoji.bakingapp.data.RecipesListAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.utils.BakerUtils;
+import com.example.shoji.bakingapp.utils.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -50,7 +52,13 @@ public class MainActivity
             restoreListInstanceState(savedInstanceState);
         }
         else {
-            BakerUtils.fetchRecipes(this, getSupportLoaderManager(), this);
+            if(NetworkUtils.isNetworkConnected(this)) {
+                BakerUtils.fetchRecipes(this, getSupportLoaderManager(), this);
+            }
+            else {
+                showSnackbar(R.id.activity_main_recipes_recycler_view,
+                        R.string.error_no_network_short, Snackbar.LENGTH_LONG);
+            }
         }
     }
 

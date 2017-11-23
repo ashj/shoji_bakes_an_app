@@ -6,4 +6,6 @@
     <string name="tool_recipe_long_description">Lorem ipsum</string>
 
     <string name="ingredients_list">Check ingredients list</string>
+
+    <string name="error_no_network_short">No Internet connectivity</string>
 </resources>
