@@ -252,4 +252,14 @@ public class BakerPlayer
         notificationManager.notify(0, builder.build());
     }
 
+    public long onSaveInstanceState() {
+    mExoPlayer.
+        return mExoPlayer.getCurrentPosition();
+    }
+    public void onRestoreInstanceState(long position) {
+
+        mExoPlayer.seekTo(position);
+
+    }
+
 }

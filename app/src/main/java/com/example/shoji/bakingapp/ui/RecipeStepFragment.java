@@ -26,6 +26,7 @@ import timber.log.Timber;
 
 
 public class RecipeStepFragment extends Fragment {
+    private static final String SAVE_INSTANCE_STATE_PLAYER_POSITION = "player_position";
 
     private static final int POSITION_INVALID = -1;
 
@@ -64,7 +65,7 @@ public class RecipeStepFragment extends Fragment {
 
         createGeneralViews(rootView);
 
-        createMediaPlayerView(rootView);
+        createMediaPlayerView(rootView, savedInstanceState);
 
 
         FragmentActivity activity = getActivity();
@@ -76,7 +77,7 @@ public class RecipeStepFragment extends Fragment {
 
 
 
-    private void createMediaPlayerView(View rootView) {
+    private void createMediaPlayerView(View rootView, Bundle state) {
         Context context = getContext();
         mExoPlayerView = rootView.findViewById(R.id.fragment_recipe_step_media_player);
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Activity.NOTIFICATION_SERVICE);
@@ -90,6 +91,7 @@ public class RecipeStepFragment extends Fragment {
         if(urlString != null) {
             Uri videoUri = Uri.parse(urlString);
             mBakerPlayer.initializePlayer(videoUri);
+            restoreInstanceState(state);
         }
     }
 
@@ -160,13 +162,18 @@ public class RecipeStepFragment extends Fragment {
     }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mBakerPlayer != null)
+            outState.putLong(SAVE_INSTANCE_STATE_PLAYER_POSITION, mBakerPlayer.onSaveInstanceState());
+    }
 
-
-
-
-
-
-
-
-
+    public void restoreInstanceState(Bundle state) {
+        if(state != null) {
+            long position = state.getLong(SAVE_INSTANCE_STATE_PLAYER_POSITION, 0);
+            Timber.d("restoreInstanceState - position: %d", position);
+            mBakerPlayer.onRestoreInstanceState(position);
+        }
+    }
 }
