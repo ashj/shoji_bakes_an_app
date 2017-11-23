@@ -109,7 +109,7 @@ public class BakerPlayer
                     mContext.getString(R.string.app_name));
             MediaSource mediaSource = new ExtractorMediaSource(
                     mediaUri,
-                    new DefaultDataSourceFactory(context , userAgent),
+                    new DefaultDataSourceFactory(context, userAgent),
                     new DefaultExtractorsFactory(),
                     null,
                     null);
@@ -253,7 +253,7 @@ public class BakerPlayer
     }
 
     public long onSaveInstanceState() {
-    mExoPlayer.
+
         return mExoPlayer.getCurrentPosition();
     }
     public void onRestoreInstanceState(long position) {
