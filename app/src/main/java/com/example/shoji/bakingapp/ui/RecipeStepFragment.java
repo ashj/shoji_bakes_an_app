@@ -97,7 +97,8 @@ public class RecipeStepFragment extends Fragment {
         Timber.d("createViews");
 
         mLongDescription = rootView.findViewById(R.id.fragment_recipe_step_long_description);
-        mLongDescription.setText(mRecipe.getStepList().get(mStepPosition).getLongDescription());
+        if(mLongDescription != null)
+            mLongDescription.setText(mRecipe.getStepList().get(mStepPosition).getLongDescription());
 
     }
 
