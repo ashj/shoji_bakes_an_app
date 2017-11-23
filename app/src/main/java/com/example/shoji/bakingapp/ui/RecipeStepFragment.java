@@ -47,6 +47,7 @@ public class RecipeStepFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         boolean attachToRoot = false;
+
         View rootView = inflater.inflate(
                 R.layout.fragment_recipe_step_list,
                 container,
@@ -74,7 +75,6 @@ public class RecipeStepFragment extends Fragment {
     }
 
 
-
     private void createMediaPlayerView(View rootView, Bundle state) {
         Context context = getContext();
 
@@ -88,20 +88,23 @@ public class RecipeStepFragment extends Fragment {
         mExoPlayerView = rootView.findViewById(R.id.fragment_recipe_step_media_player);
         mBakerPlayer.setPlayerView(mExoPlayerView);
 
+
         String urlString = mRecipe.getStepList().get(mStepPosition).getVideoUrl();
         if(urlString != null) {
             Uri videoUri = Uri.parse(urlString);
             mBakerPlayer.initializePlayer(videoUri);
             restoreInstanceState(state);
         }
+
     }
 
     private void createGeneralViews(View rootView) {
         Timber.d("createViews");
 
         mLongDescription = rootView.findViewById(R.id.fragment_recipe_step_long_description);
-        if(mLongDescription != null)
+        if(mLongDescription != null) {
             mLongDescription.setText(mRecipe.getStepList().get(mStepPosition).getLongDescription());
+        }
 
     }
 

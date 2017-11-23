@@ -61,7 +61,10 @@ public class BakerPlayer
 
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
-        mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
+                context,
+                trackSelector,
+                loadControl);
 
 
         ExoPlayer.EventListener eventHandler = this;
@@ -104,8 +107,6 @@ public class BakerPlayer
     public void initializePlayer(Uri mediaUri) {
         Context context = mContext;
 
-
-
         String userAgent = Util.getUserAgent(context,
                 mContext.getString(R.string.app_name));
         MediaSource mediaSource = new ExtractorMediaSource(
@@ -118,6 +119,8 @@ public class BakerPlayer
         mExoPlayer.prepare(mediaSource);
         mExoPlayer.setPlayWhenReady(true);
     }
+
+    // Callbacks
 
     private class MySessionCallback extends MediaSessionCompat.Callback {
         @Override
