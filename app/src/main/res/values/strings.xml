@@ -7,6 +7,9 @@
 
     <string name="ingredients_list">Check ingredients list</string>
 
+    <string name="nav_button_previous" translatable="false">\u25c0</string>
+    <string name="nav_button_next" translatable="false">\u25b6</string>
+
     <string name="media_player_notification_play">Play</string>
     <string name="media_player_notification_pause">Pause</string>
 

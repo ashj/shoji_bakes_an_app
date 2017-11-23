@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="activity_main_layout_num_columns">1</integer>
+    <dimen name="navbutton_recipe_step_button_margin">30dp</dimen>
+    <dimen name="navbutton_recipe_step_button_width">40dp</dimen>
+    <dimen name="navbutton_recipe_step_button_height">40dp</dimen>
+    <dimen name="navbutton_recipe_step_button_text_size">48dp</dimen>
 </resources>

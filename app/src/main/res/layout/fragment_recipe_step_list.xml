@@ -21,7 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.7"/>
+        app:layout_constraintGuide_percent="0.85"/>
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/fragment_recipe_step_media_player"
@@ -45,6 +45,17 @@
         app:layout_constraintTop_toBottomOf="@+id/fragment_recipe_step_guideline_1"
         tools:text="@string/tool_recipe_long_description"
         android:background="@android:color/darker_gray"
+        />
+
+    <include
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_recipe_step_guideline_2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        layout="@layout/navbutton_recipe_step"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
         />
 
 </android.support.constraint.ConstraintLayout>
