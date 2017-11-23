@@ -1,14 +1,11 @@
 package com.example.shoji.bakingapp.media;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.session.MediaSession;
 import android.net.Uri;
-import android.support.design.widget.Snackbar;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -48,7 +45,7 @@ public class BakerPlayer
 
     private NotificationManager mNotificationManager;
 
-    private static final int NOFITICATION_MAX_LENGTH = 30;
+    private static final int NOTIFICATION_MAX_LENGTH = 30;
     private String mNotificationTitle;
     private String mNotificationText;
 
@@ -204,8 +201,8 @@ public class BakerPlayer
     }
 
     private String trimmNotificationString(String string) {
-        if(string.length() > NOFITICATION_MAX_LENGTH) {
-            return string.substring(0, NOFITICATION_MAX_LENGTH);
+        if(string.length() > NOTIFICATION_MAX_LENGTH) {
+            return string.substring(0, NOTIFICATION_MAX_LENGTH);
         }
         return string;
     }
@@ -218,6 +215,7 @@ public class BakerPlayer
         mNotificationText = trimmNotificationString(text);
     }
 
+    /* FOR APIv26 */
     private void showNotification(Context context,
                                   NotificationManager notificationManager,
                                   MediaSessionCompat mediaSession,
