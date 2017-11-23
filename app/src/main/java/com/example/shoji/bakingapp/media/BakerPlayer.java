@@ -56,7 +56,9 @@ public class BakerPlayer {
         long actions = PlaybackStateCompat.ACTION_PLAY |
                 PlaybackStateCompat.ACTION_PAUSE |
                 PlaybackStateCompat.ACTION_PLAY_PAUSE |
-                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
+                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                PlaybackStateCompat.ACTION_FAST_FORWARD |
+                PlaybackStateCompat.ACTION_REWIND;
         mStateBuilder = new PlaybackStateCompat.Builder().setActions(actions);
         mMediaSession.setPlaybackState(mStateBuilder.build());
 

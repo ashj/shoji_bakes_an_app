@@ -32,4 +32,9 @@ dependencies {
 
     //snackbar
     compile 'com.android.support:design:26.1.0'
+
+    //exoplayer
+    compile 'com.google.android.exoplayer:exoplayer:r2.2.0'
+
+
 }
