@@ -17,8 +17,8 @@ import java.util.Scanner;
 import timber.log.Timber;
 
 public class NetworkUtils {
-    private static final String TAG = NetworkUtils.class.getSimpleName();
-
+    public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int READ_TIMEOUT = 10000;
     /**
      * This method returns the entire result from the HTTP response.
      *
@@ -29,6 +29,9 @@ public class NetworkUtils {
     private static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
+            urlConnection.setConnectTimeout(CONNECTION_TIMEOUT);
+            urlConnection.setReadTimeout(READ_TIMEOUT);
+
             InputStream in = urlConnection.getInputStream();
 
             Scanner scanner = new Scanner(in);

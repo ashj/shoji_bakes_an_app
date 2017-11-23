@@ -34,9 +34,10 @@ public class FetchRecipesListener
     public ArrayList<Recipe> onLoadInBackground(Context context, Bundle args) {
         String jsonString = NetworkUtils.getDataFromUrlString(RECIPES_URL);
         //Timber.d("FetchRecipesListener -- got json: %s", result);
-        ArrayList<Recipe> result = RecipeJsonUtils.listRecipes(jsonString);
+        ArrayList<Recipe> result = null;
 
-
+        if(jsonString != null)
+            result = RecipeJsonUtils.listRecipes(jsonString);
 
         return result;
     }
