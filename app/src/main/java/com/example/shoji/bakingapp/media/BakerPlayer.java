@@ -223,48 +223,34 @@ public class BakerPlayer
                                   MediaSessionCompat mediaSession,
                                   PlaybackStateCompat state) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-Timber.d("Part 1");
+
         int icon;
         String play_pause;
         if(state.getState() == PlaybackStateCompat.STATE_PLAYING){
             icon = R.drawable.exo_controls_pause;
-            play_pause = mContext.getString(R.string.media_player_notification_pause);
+            play_pause = context.getString(R.string.media_player_notification_pause);
 
         } else {
             icon = R.drawable.exo_controls_play;
-            play_pause = mContext.getString(R.string.media_player_notification_play);
+            play_pause = context.getString(R.string.media_player_notification_play);
         }
 
-        Timber.d("Part 2");
         NotificationCompat.Action playPauseAction = new NotificationCompat.Action(
                 icon, play_pause,
                 MediaButtonReceiver.buildMediaButtonPendingIntent(context,
                         PlaybackStateCompat.ACTION_PLAY_PAUSE));
 
-        NotificationCompat.Action restartAction = new android.support.v4.app.NotificationCompat
-                //.Action(R.drawable.exo_controls_previous, getString(R.string.restart),
-                .Action(R.drawable.exo_controls_previous, "restart",
-                MediaButtonReceiver.buildMediaButtonPendingIntent
-                        (context, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
-
-        //PendingIntent contentPendingIntent = PendingIntent.getActivity
-        //        (this, 0, new Intent(this, QuizActivity.class), 0);
-        Timber.d("Part 3");
         builder
                 .setContentTitle(mNotificationTitle)
                 .setContentText(mNotificationText)
                 //.setContentIntent(contentPendingIntent)
                 .setSmallIcon(R.drawable.ic_music_note)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .addAction(restartAction)
                 .addAction(playPauseAction)
                 .setStyle(new NotificationCompat.MediaStyle()
-                        .setMediaSession(sMediaSession.getSessionToken())
-                        .setShowActionsInCompactView(0,1));
+                        .setMediaSession(mediaSession.getSessionToken())
+                        .setShowActionsInCompactView(0));
 
-
-        //NotificationManager mNotificationManager = (NotificationManager) getActivity().getSystemService(Activity.NOTIFICATION_SERVICE);
-        Timber.d("Part 4");
         notificationManager.notify(0, builder.build());
     }
 
