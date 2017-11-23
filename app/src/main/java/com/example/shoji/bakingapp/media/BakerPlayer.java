@@ -9,20 +9,26 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.ui.RecipeStepFragment;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 
-public class BakerPlayer {
+public class BakerPlayer
+    implements ExoPlayer.EventListener {
     private Context mContext;
 
     private SimpleExoPlayer mExoPlayer;
@@ -80,6 +86,8 @@ public class BakerPlayer {
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
             mExoPlayerView.setPlayer(mExoPlayer);
 
+            ExoPlayer.EventListener eventHandler = this;
+            mExoPlayer.addListener(eventHandler);
 
             String userAgent = Util.getUserAgent(context,
                     mContext.getString(R.string.app_name));
@@ -121,4 +129,41 @@ public class BakerPlayer {
     public void mediaSessionSetActive(boolean state) {
         mMediaSession.setActive(state);
     }
+
+    // ExoPlayer Event Listeners
+
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
+    }
+
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+    }
+
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        float playbackSpeed = 1f;
+        if((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
+            mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
+                    mExoPlayer.getCurrentPosition(), playbackSpeed);
+        } else if((playbackState == ExoPlayer.STATE_READY)){
+            mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
+                    mExoPlayer.getCurrentPosition(), playbackSpeed);
+        }
+        mMediaSession.setPlaybackState(mStateBuilder.build());
+
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+    }
+
+    @Override
+    public void onPositionDiscontinuity() {
+    }
+
 }
