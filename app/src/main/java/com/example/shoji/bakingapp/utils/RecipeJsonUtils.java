@@ -17,6 +17,9 @@ public class RecipeJsonUtils {
     private static final String JSON_RECIPE_ID = "id";
     private static final String JSON_RECIPE_NAME = "name";
     private static final String JSON_RECIPE_INGREDIENTS = "ingredients";
+    private static final String JSON_RECIPE_SERVINGS = "servings";
+    private static final String JSON_RECIPE_IMAGE = "image";
+
 
     private static final String JSON_INGREDIENT_QUANTITY = "quantity";
     private static final String JSON_INGREDIENT_MEASURE = "measure";
@@ -49,10 +52,14 @@ public class RecipeJsonUtils {
 
                 String id = getString(recipeJsonObject, JSON_RECIPE_ID);
                 String name = getString(recipeJsonObject, JSON_RECIPE_NAME);
+                String servings = getString(recipeJsonObject, JSON_RECIPE_SERVINGS);
+                String image = getString(recipeJsonObject, JSON_RECIPE_IMAGE);
 //                Timber.d("recipe id: %s / recipe name: %s", id, name);
 
                 recipe.setId(id);
                 recipe.setName(name);
+                recipe.setServings(servings);
+                recipe.setImage(image);
 
                 // Get ingredients list
                 ArrayList<RecipeIngredient> ingredientList = null;

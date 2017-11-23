@@ -10,6 +10,8 @@ public class Recipe implements Parcelable {
     private String mName;
     private ArrayList<RecipeIngredient> mIngredientList;
     private ArrayList<RecipeStep> mStepList;
+    private String mServings;
+    private String mImage;
 
     public Recipe() {}
 
@@ -18,6 +20,8 @@ public class Recipe implements Parcelable {
         mName = in.readString();
         mIngredientList = in.createTypedArrayList(RecipeIngredient.CREATOR);
         mStepList = in.createTypedArrayList(RecipeStep.CREATOR);
+        mServings = in.readString();
+        mImage = in.readString();
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -43,6 +47,8 @@ public class Recipe implements Parcelable {
         dest.writeString(mName);
         dest.writeTypedList(mIngredientList);
         dest.writeTypedList(mStepList);
+        dest.writeString(mServings);
+        dest.writeString(mImage);
     }
 
 
@@ -79,11 +85,29 @@ public class Recipe implements Parcelable {
         this.mStepList = stepList;
     }
 
+    public String getServings() {
+        return mServings;
+    }
+
+    public void setServings(String servings) {
+        this.mServings = servings;
+    }
+
+    public String getImage() {
+        return mImage;
+    }
+
+    public void setImage(String image) {
+        this.mImage = image;
+    }
+
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("recipe id: ").append(mId)
-                .append("\nname: ").append(mName).append("\n");
+                .append("\nname: ").append(mName).append("\n")
+                .append("\nservings: ").append(mServings).append("\n")
+                .append("\nimage: ").append(mImage).append("\n");
         if(mIngredientList != null) {
             for (int i = 0; i < mIngredientList.size(); i++)
                 sb.append(mIngredientList.get(i).toString()).append("\n");
