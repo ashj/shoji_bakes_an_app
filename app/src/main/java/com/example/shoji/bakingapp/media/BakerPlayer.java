@@ -39,7 +39,6 @@ public class BakerPlayer
     private Context mContext;
 
     private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mExoPlayerView;
     private PlaybackStateCompat.Builder mStateBuilder;
     private static MediaSessionCompat sMediaSession;
 
@@ -50,13 +49,23 @@ public class BakerPlayer
     private String mNotificationText;
 
     public BakerPlayer(Context context,
-                       SimpleExoPlayerView simpleExoPlayerView,
                        NotificationManager notificationManager) {
         mContext = context;
-        mExoPlayerView = simpleExoPlayerView;
         mNotificationManager = notificationManager;
-
+        initiateExoPlayer();
         initiateMediaSession();
+    }
+
+    private void initiateExoPlayer() {
+        Context context = mContext;
+
+        TrackSelector trackSelector = new DefaultTrackSelector();
+        LoadControl loadControl = new DefaultLoadControl();
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
+
+
+        ExoPlayer.EventListener eventHandler = this;
+        mExoPlayer.addListener(eventHandler);
     }
 
     private void initiateMediaSession() {
@@ -93,30 +102,21 @@ public class BakerPlayer
     }
 
     public void initializePlayer(Uri mediaUri) {
-        if(mExoPlayer == null) {
-            Context context = mContext;
+        Context context = mContext;
 
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
 
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
-            mExoPlayerView.setPlayer(mExoPlayer);
 
-            ExoPlayer.EventListener eventHandler = this;
-            mExoPlayer.addListener(eventHandler);
+        String userAgent = Util.getUserAgent(context,
+                mContext.getString(R.string.app_name));
+        MediaSource mediaSource = new ExtractorMediaSource(
+                mediaUri,
+                new DefaultDataSourceFactory(context, userAgent),
+                new DefaultExtractorsFactory(),
+                null,
+                null);
 
-            String userAgent = Util.getUserAgent(context,
-                    mContext.getString(R.string.app_name));
-            MediaSource mediaSource = new ExtractorMediaSource(
-                    mediaUri,
-                    new DefaultDataSourceFactory(context, userAgent),
-                    new DefaultExtractorsFactory(),
-                    null,
-                    null);
-
-            mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
-        }
+        mExoPlayer.prepare(mediaSource);
+        mExoPlayer.setPlayWhenReady(true);
     }
 
     private class MySessionCallback extends MediaSessionCompat.Callback {
@@ -262,4 +262,7 @@ public class BakerPlayer
 
     }
 
+    public void setPlayerView(SimpleExoPlayerView exoPlayerView) {
+        exoPlayerView.setPlayer(mExoPlayer);
+    }
 }

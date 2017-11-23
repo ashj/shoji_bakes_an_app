@@ -77,13 +77,16 @@ public class RecipeStepFragment extends Fragment {
 
     private void createMediaPlayerView(View rootView, Bundle state) {
         Context context = getContext();
-        mExoPlayerView = rootView.findViewById(R.id.fragment_recipe_step_media_player);
+
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Activity.NOTIFICATION_SERVICE);
 
-        mBakerPlayer = new BakerPlayer(context, mExoPlayerView, notificationManager);
+        mBakerPlayer = new BakerPlayer(context, notificationManager);
         mBakerPlayer.setNotificationTitle(mRecipe.getName());
         mBakerPlayer.setNotificationText(mRecipe.getStepList().get(mStepPosition).getShortDescription());
 
+
+        mExoPlayerView = rootView.findViewById(R.id.fragment_recipe_step_media_player);
+        mBakerPlayer.setPlayerView(mExoPlayerView);
 
         String urlString = mRecipe.getStepList().get(mStepPosition).getVideoUrl();
         if(urlString != null) {
