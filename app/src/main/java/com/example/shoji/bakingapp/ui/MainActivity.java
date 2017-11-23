@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -25,7 +26,7 @@ public class MainActivity
     private static final String SAVE_INSTANCE_STATE_RECIPE_DATA = "recipe-data";
     private final static String SAVE_INSTANCE_STATE_LIST_POSITION = "list-position";
 
-
+    private boolean mIsTabletMode;
     private RecipesListAdapter mRecipeListAdapter;
     private RecyclerView mRecipeListRecyclerView;
 
@@ -39,6 +40,9 @@ public class MainActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /* check if sw600dp layout was loaded. If so, it will enable table mode */
+        mIsTabletMode = (findViewById(R.id.activity_main_sw600dp_layout) != null);
 
         createRecipesListRecyclerView();
 
@@ -55,8 +59,17 @@ public class MainActivity
 
         mRecipeListRecyclerView = findViewById(R.id.activity_main_recipes_recycler_view);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        mRecipeListRecyclerView.setLayoutManager(linearLayoutManager);
+        RecyclerView.LayoutManager layoutManager;
+
+        if(mIsTabletMode) {
+            int numColumns = getResources().getInteger(R.integer.activity_main_layout_num_columns);
+            layoutManager = new GridLayoutManager(context, numColumns);
+        }
+        else {
+            layoutManager = new LinearLayoutManager(context);
+        }
+
+        mRecipeListRecyclerView.setLayoutManager(layoutManager);
 
         mRecipeListRecyclerView.setHasFixedSize(true);
 
