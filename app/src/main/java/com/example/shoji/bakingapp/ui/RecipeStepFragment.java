@@ -65,17 +65,13 @@ public class RecipeStepFragment extends Fragment
                 attachToRoot);
 
         mRecipe = getRecipeFromActivity();
-        //mStepPosition = getStepNumberFromActivity();
-        //if(mStepPosition == POSITION_INVALID) {
-        //    Timber.d("No position extra from activity. Try from getArguments");
-            mStepPosition = getStepNumberFromBundle(getArguments());
-        //}
+        mStepPosition = getStepNumberFromBundle(getArguments());
         Timber.d("Got currentPosition -- %d", mStepPosition);
 
 
         createGeneralViews(rootView);
 
-        //createMediaPlayerView(rootView, savedInstanceState);
+        createMediaPlayerView(rootView, savedInstanceState);
 
 
         FragmentActivity activity = getActivity();
@@ -193,23 +189,6 @@ public class RecipeStepFragment extends Fragment
         return intent.getParcelableExtra(RecipeActivity.EXTRA_RECIPE_DATA);
     }
 
-
-
-    private int getStepNumberFromActivity() {
-        String extra_key = RecipeStepActivity.EXTRA_STEP_NUMBER;
-        FragmentActivity activity = getActivity();
-        int position = POSITION_INVALID;
-        if(activity != null) {
-            Intent intent = activity.getIntent();
-            if(intent.hasExtra(extra_key)) {
-                Bundle args = intent.getBundleExtra(extra_key);
-                position = getStepNumberFromBundle(args);
-                Timber.d("getStepNumberFromActivity -- %d", position);
-            }
-        }
-
-        return position;
-    }
 
     private int getStepNumberFromBundle(Bundle args) {
         String extra_key = RecipeStepActivity.EXTRA_STEP_NUMBER;
