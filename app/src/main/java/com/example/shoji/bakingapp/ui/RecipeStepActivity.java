@@ -6,7 +6,11 @@ import android.view.MenuItem;
 
 import com.example.shoji.bakingapp.R;
 
-public class RecipeStepActivity extends AppCompatActivity {
+import timber.log.Timber;
+
+public class RecipeStepActivity
+        extends AppCompatActivity
+        implements RecipeStepFragment.OnClickNavButtonListener {
     public static final String EXTRA_STEP_NUMBER = "extra-step-number";
 
     @Override
@@ -24,5 +28,15 @@ public class RecipeStepActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClickPrev(int currentPosition) {
+        Timber.d("Tapped prev!");
+    }
+
+    @Override
+    public void onClickNext(int currentPosition) {
+        Timber.d("Tapped next!");
     }
 }

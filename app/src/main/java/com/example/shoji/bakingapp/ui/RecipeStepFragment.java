@@ -22,7 +22,8 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import timber.log.Timber;
 
 
-public class RecipeStepFragment extends Fragment {
+public class RecipeStepFragment extends Fragment
+    implements View.OnClickListener {
     private static final String SAVE_INSTANCE_STATE_PLAYER_POSITION = "player_position";
 
     private static final int POSITION_INVALID = -1;
@@ -39,8 +40,16 @@ public class RecipeStepFragment extends Fragment {
     private TextView mPreviousStepButton;
     private TextView mNextStepButton;
 
+    private OnClickNavButtonListener mOnClickHandler;
+
     public RecipeStepFragment() {
     }
+
+    public interface OnClickNavButtonListener {
+        void onClickPrev (int currentPosition);
+        void onClickNext (int currentPosition);
+    }
+
 
     @Nullable
     @Override
@@ -107,17 +116,53 @@ public class RecipeStepFragment extends Fragment {
 
         if(!mIsPhoneLandscape) {
             mLongDescription.setText(mRecipe.getStepList().get(mStepPosition).getLongDescription());
+            createNavButtonView(rootView);
 
-            mPreviousStepButton = rootView.findViewById(R.id.navbutton_recipe_previous_button);
-            mNextStepButton = rootView.findViewById(R.id.navbutton_recipe_next_button);
         }
 
         Timber.d("NOT NULL?: mPreviousStepButton: %b, mNextStepButton: %b", (mPreviousStepButton !=null), (mNextStepButton!=null));
 
     }
 
+    private void createNavButtonView(View rootView) {
+        mPreviousStepButton = rootView.findViewById(R.id.navbutton_recipe_previous_button);
+        mNextStepButton = rootView.findViewById(R.id.navbutton_recipe_next_button);
+        View.OnClickListener clickHandler = this;
 
-    
+        if(mPreviousStepButton != null)
+            mPreviousStepButton.setOnClickListener(clickHandler);
+        if(mNextStepButton != null)
+            mNextStepButton.setOnClickListener(clickHandler);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.navbutton_recipe_previous_button:
+                mOnClickHandler.onClickPrev(mStepPosition);
+                break;
+            case R.id.navbutton_recipe_next_button:
+                mOnClickHandler.onClickNext(mStepPosition);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mOnClickHandler = (OnClickNavButtonListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnImageClickListener");
+        }
+    }
+
+
     private Recipe getRecipeFromActivity() {
         FragmentActivity activity = getActivity();
         if(activity == null)
