@@ -84,7 +84,7 @@ public class RecipeStepActivity
         RecipeStepFragment stepFragment = prepareStepFragment(position);
 
         mFragmentManager.beginTransaction()
-                .add(R.id.activity_recipe_step_content_body, stepFragment)
+                .replace(R.id.activity_recipe_step_content_body, stepFragment)
                 .commit();
     }
 }
