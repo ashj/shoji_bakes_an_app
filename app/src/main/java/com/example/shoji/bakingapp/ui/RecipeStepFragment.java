@@ -229,8 +229,10 @@ public class RecipeStepFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mBakerPlayer.releasePlayer();
-        mBakerPlayer.mediaSessionSetActive(false);
+        if(mBakerPlayer != null) {
+            mBakerPlayer.releasePlayer();
+            mBakerPlayer.mediaSessionSetActive(false);
+        }
     }
 
 

@@ -146,7 +146,8 @@ public class BakerPlayer
     }
 
     public void releasePlayer() {
-        mNotificationManager.cancelAll();
+        if(mNotificationManager != null)
+            mNotificationManager.cancelAll();
         if(mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
