@@ -129,10 +129,24 @@ public class RecipeStepFragment extends Fragment
         mNextStepButton = rootView.findViewById(R.id.navbutton_recipe_next_button);
         View.OnClickListener clickHandler = this;
 
-        if(mPreviousStepButton != null)
-            mPreviousStepButton.setOnClickListener(clickHandler);
-        if(mNextStepButton != null)
-            mNextStepButton.setOnClickListener(clickHandler);
+        if(mPreviousStepButton != null) {
+            /* first step does not have a previous step */
+            if(mStepPosition == 0) {
+                mPreviousStepButton.setVisibility(View.GONE);
+            }
+            else {
+                mPreviousStepButton.setOnClickListener(clickHandler);
+            }
+        }
+
+        if(mNextStepButton != null) {
+            if(mStepPosition == mRecipe.getStepList().size() - 1) {
+                mNextStepButton.setVisibility(View.GONE);
+            }
+            else {
+                mNextStepButton.setOnClickListener(clickHandler);
+            }
+        }
 
     }
 
@@ -161,6 +175,7 @@ public class RecipeStepFragment extends Fragment
                     + " must implement OnImageClickListener");
         }
     }
+
 
 
     private Recipe getRecipeFromActivity() {
