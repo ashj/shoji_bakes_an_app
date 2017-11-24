@@ -65,17 +65,17 @@ public class RecipeStepFragment extends Fragment
                 attachToRoot);
 
         mRecipe = getRecipeFromActivity();
-        mStepPosition = getStepNumberFromActivity();
-        if(mStepPosition == POSITION_INVALID) {
-            Timber.d("No position extra from activity. Try from getArguments");
+        //mStepPosition = getStepNumberFromActivity();
+        //if(mStepPosition == POSITION_INVALID) {
+        //    Timber.d("No position extra from activity. Try from getArguments");
             mStepPosition = getStepNumberFromBundle(getArguments());
-        }
-        Timber.d("Got position -- %d", mStepPosition);
+        //}
+        Timber.d("Got currentPosition -- %d", mStepPosition);
 
 
         createGeneralViews(rootView);
 
-        createMediaPlayerView(rootView, savedInstanceState);
+        //createMediaPlayerView(rootView, savedInstanceState);
 
 
         FragmentActivity activity = getActivity();
