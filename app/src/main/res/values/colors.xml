@@ -21,4 +21,9 @@
     <color name="recipes_list_light_selector_selected">@color/colorAccent</color>
     <color name="recipes_list_light_selector_default">@color/colorPrimaryLight</color>
 
+    <color name="navbutton_selector_pressed">@color/colorPrimaryDark</color>
+    <color name="navbutton_selector_activated">@color/colorPrimaryDark</color>
+    <color name="navbutton_selector_selected">@color/colorPrimaryDark</color>
+    <color name="navbutton_list_selector_default">@android:color/transparent</color>
+
 </resources>
