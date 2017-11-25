@@ -41,12 +41,6 @@ public class RecipeStepActivity
                     .add(R.id.activity_recipe_step_content_body, stepFragment)
                     .commit();
         }
-        else {
-            Timber.d("Replacing the fragment");
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.activity_recipe_step_content_body, stepFragment)
-                    .commit();
-        }
      }
 
     @Override
