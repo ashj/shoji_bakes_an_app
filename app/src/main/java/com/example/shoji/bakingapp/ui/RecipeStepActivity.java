@@ -18,7 +18,7 @@ public class RecipeStepActivity
     private static final int INITIAL_STEP_POSITION = 0;
     private static final int POSITION_INVALID = -1;
 
-    private RecipeStepNavButtonFragmentManager mNavButtonFragmentManager;
+    private RecipeStepFragmentManager mStepFragmentManager;
     private int mStepPosition;
 
     @Override
@@ -27,20 +27,16 @@ public class RecipeStepActivity
         setContentView(R.layout.activity_recipe_step);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mNavButtonFragmentManager = new RecipeStepNavButtonFragmentManager(fragmentManager, R.id.activity_recipe_step_content_body);
+        mStepFragmentManager = new RecipeStepFragmentManager(fragmentManager, R.id.activity_recipe_step_content_body);
 
         mStepPosition = getStepNumberFromSavedInstanceState(savedInstanceState);
         if(mStepPosition == POSITION_INVALID)
             mStepPosition = getPositionFromIntent();
-        RecipeStepFragment stepFragment = mNavButtonFragmentManager.prepareStepFragment(mStepPosition);
         Timber.d("GOT POSITION: %d", mStepPosition);
-
 
         if(savedInstanceState == null) {
             Timber.d("Adding the fragment");
-            fragmentManager.beginTransaction()
-                    .add(R.id.activity_recipe_step_content_body, stepFragment)
-                    .commit();
+            mStepFragmentManager.addStepFragment(mStepPosition);
         }
      }
 
@@ -59,14 +55,14 @@ public class RecipeStepActivity
     public void onClickPrev(int currentPosition) {
         Timber.d("currentPosition = %d, Tapped prev!", currentPosition);
         mStepPosition -= 1;
-        mNavButtonFragmentManager.replaceStepFragment(mStepPosition);
+        mStepFragmentManager.replaceStepFragment(mStepPosition);
     }
 
     @Override
     public void onClickNext(int currentPosition) {
         Timber.d("currentPosition = %d, Tapped next!", currentPosition);
         mStepPosition += 1;
-        mNavButtonFragmentManager.replaceStepFragment(mStepPosition);
+        mStepFragmentManager.replaceStepFragment(mStepPosition);
     }
 
     private int getPositionFromIntent() {

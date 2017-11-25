@@ -1,21 +1,15 @@
 package com.example.shoji.bakingapp.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcel;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.data.RecipeMasterListAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
-import com.example.shoji.bakingapp.pojo.RecipeIngredient;
-import com.example.shoji.bakingapp.pojo.RecipeStep;
 
 import timber.log.Timber;
 
@@ -25,7 +19,7 @@ public class RecipeActivity extends AppCompatActivity
     public static final String EXTRA_RECIPE_DATA = "extra-recipe-data";
 
     private boolean mIsTabletMode;
-    private RecipeStepNavButtonFragmentManager mNavButtonFragmentManager;
+    private RecipeStepFragmentManager mStepFragmentManager;
 
     private Context mContext;
     private Recipe mRecipe;
@@ -43,7 +37,7 @@ public class RecipeActivity extends AppCompatActivity
         Timber.d("mIsTabletMode? : %b", mIsTabletMode);
 
         if(mIsTabletMode) {
-            mNavButtonFragmentManager = new RecipeStepNavButtonFragmentManager(getSupportFragmentManager(), R.id.activity_recipe_content_body);
+            mStepFragmentManager = new RecipeStepFragmentManager(getSupportFragmentManager(), R.id.activity_recipe_content_body);
         }
 
         mRecipe = getRecipeFromIntent();
@@ -89,7 +83,7 @@ public class RecipeActivity extends AppCompatActivity
     @Override
     public void onClickStep(int position) {
         if(mIsTabletMode) {
-            mNavButtonFragmentManager.replaceStepFragment(position);
+            mStepFragmentManager.replaceStepFragment(position);
         } else {
             Bundle args  = new Bundle();
             args.putInt(RecipeStepActivity.EXTRA_STEP_NUMBER, position);
@@ -116,11 +110,11 @@ public class RecipeActivity extends AppCompatActivity
     /* For tablet mode */
     @Override
     public void onClickPrev(int currentPosition) {
-        mNavButtonFragmentManager.replaceStepFragment(currentPosition - 1);
+        mStepFragmentManager.replaceStepFragment(currentPosition - 1);
     }
 
     @Override
     public void onClickNext(int currentPosition) {
-        mNavButtonFragmentManager.replaceStepFragment(currentPosition + 1);
+        mStepFragmentManager.replaceStepFragment(currentPosition + 1);
     }
 }
