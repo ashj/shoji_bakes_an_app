@@ -8,4 +8,6 @@
     <dimen name="recipes_list_padding">24dp</dimen>
     <dimen name="recipes_list_margin">24dp</dimen>
     <dimen name="recipes_list_text_size">40sp</dimen>
+
+    <dimen name="recipe_details_text_size">30sp</dimen>
 </resources>

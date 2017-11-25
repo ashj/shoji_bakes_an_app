@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.pojo.Recipe;
 
-import java.util.ArrayList;
-
 import timber.log.Timber;
 
 public class RecipeMasterListAdapter
@@ -46,7 +44,7 @@ public class RecipeMasterListAdapter
         boolean attachToRoot = false;
         View itemView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.recipe_adapter_item, parent, attachToRoot);
+                .inflate(R.layout.recipe_details_adapter_item, parent, attachToRoot);
 
         SimpleViewHolder.OnClickListener onClickHandler = this;
 

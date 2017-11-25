@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recipe_adapter_title_tv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/recipes_list_margin"
+    android:background="@drawable/list_selector_light"
+    android:padding="@dimen/recipes_list_padding"
+    android:textAlignment="center"
+    android:textSize="@dimen/recipe_details_text_size"
+    android:textColor="@color/textColorPrimaryLight"
+    tools:text="@string/tool_recipe_title" />

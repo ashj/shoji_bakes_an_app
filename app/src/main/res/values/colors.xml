@@ -16,4 +16,9 @@
     <color name="recipes_list_selector_selected">@color/colorAccent</color>
     <color name="recipes_list_selector_default">@color/colorPrimary</color>
 
+    <color name="recipes_list_light_selector_pressed">@color/colorAccent</color>
+    <color name="recipes_list_light_selector_activated">@color/colorAccent</color>
+    <color name="recipes_list_light_selector_selected">@color/colorAccent</color>
+    <color name="recipes_list_light_selector_default">@color/colorPrimaryLight</color>
+
 </resources>

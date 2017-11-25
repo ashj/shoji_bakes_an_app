@@ -38,7 +38,7 @@ public class RecipesListAdapter
         boolean attachToRoot = false;
         View itemView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.recipe_adapter_item, parent, attachToRoot);
+                .inflate(R.layout.recipes_list_adapter_item, parent, attachToRoot);
 
         SimpleViewHolder.OnClickListener onClickHandler = this;
 
