@@ -25,10 +25,12 @@ public class RecipeActivity extends AppCompatActivity
     public static final String EXTRA_RECIPE_DATA = "extra-recipe-data";
 
     private boolean mIsTabletMode;
+    private RecipeStepNavButtonFragmentManager mNavButtonFragmentManager;
 
     private Context mContext;
     private Recipe mRecipe;
-    private FrameLayout mContentBody;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +42,15 @@ public class RecipeActivity extends AppCompatActivity
         mIsTabletMode = isTabletMode();
         Timber.d("mIsTabletMode? : %b", mIsTabletMode);
 
+        if(mIsTabletMode) {
+            mNavButtonFragmentManager = new RecipeStepNavButtonFragmentManager(getSupportFragmentManager(), R.id.activity_recipe_content_body);
+        }
+
         mRecipe = getRecipeFromIntent();
     }
 
     private boolean isTabletMode() {
-        if((mContentBody = findViewById(R.id.activity_recipe_content_body))
-                == null)
+        if((findViewById(R.id.activity_recipe_content_body)) == null)
             return false;
         return true;
     }
@@ -83,20 +88,12 @@ public class RecipeActivity extends AppCompatActivity
 
     @Override
     public void onClickStep(int position) {
-        //TODO - do steps
-        Bundle args  = new Bundle();
-        args.putInt(RecipeStepActivity.EXTRA_STEP_NUMBER, position);
-
         if(mIsTabletMode) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
-            RecipeStepFragment stepFragment = new RecipeStepFragment();
-            stepFragment.setArguments(args);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.activity_recipe_content_body, stepFragment)
-                    .commit();
-
+            mNavButtonFragmentManager.replaceStepFragment(position);
         } else {
+            Bundle args  = new Bundle();
+            args.putInt(RecipeStepActivity.EXTRA_STEP_NUMBER, position);
+
             Intent intent = new Intent(this, RecipeStepActivity.class);
             intent.putExtra(EXTRA_RECIPE_DATA, mRecipe);
             intent.putExtra(RecipeStepActivity.EXTRA_STEP_NUMBER, args);
@@ -119,11 +116,11 @@ public class RecipeActivity extends AppCompatActivity
     /* For tablet mode */
     @Override
     public void onClickPrev(int currentPosition) {
-
+        mNavButtonFragmentManager.replaceStepFragment(currentPosition - 1);
     }
 
     @Override
     public void onClickNext(int currentPosition) {
-
+        mNavButtonFragmentManager.replaceStepFragment(currentPosition + 1);
     }
 }
