@@ -25,25 +25,31 @@
 
     <include
         layout="@layout/default_fragment_recipe_step_playerview_list"
-         android:layout_width="0dp"
-        android:layout_height="@dimen/recipe_step_multimedia_player_height"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/fragment_recipe_step_guideline_1" />
 
-    <TextView
-        android:id="@+id/fragment_recipe_step_long_description"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:textSize="44sp"
         app:layout_constraintBottom_toTopOf="@+id/fragment_recipe_step_guideline_2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_recipe_step_guideline_1"
-        tools:text="@string/tool_recipe_long_description"
-        android:background="@android:color/darker_gray"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_recipe_step_guideline_1">
+
+        <TextView
+            android:id="@+id/fragment_recipe_step_long_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/recipe_step_text_padding"
+            android:textSize="@dimen/recipe_step_text_size"
+
+            tools:text="@string/tool_recipe_long_description" />
+    </ScrollView>
+
 
     <include
         app:layout_constraintStart_toStartOf="parent"
