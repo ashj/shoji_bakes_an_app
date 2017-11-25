@@ -168,7 +168,7 @@ public class RecipeStepFragment extends Fragment
             mOnClickHandler = (OnClickNavButtonListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnImageClickListener");
+                    + " must implement OnClickNavButtonListener");
         }
     }
 

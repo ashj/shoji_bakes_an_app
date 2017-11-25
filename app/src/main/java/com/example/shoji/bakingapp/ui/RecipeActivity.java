@@ -20,7 +20,8 @@ import com.example.shoji.bakingapp.pojo.RecipeStep;
 import timber.log.Timber;
 
 public class RecipeActivity extends AppCompatActivity
-        implements RecipeMasterListAdapter.OnClickListener {
+        implements RecipeMasterListAdapter.OnClickListener,
+        RecipeStepFragment.OnClickNavButtonListener {
     public static final String EXTRA_RECIPE_DATA = "extra-recipe-data";
 
     private boolean mIsTabletMode;
@@ -113,5 +114,16 @@ public class RecipeActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /* For tablet mode */
+    @Override
+    public void onClickPrev(int currentPosition) {
+
+    }
+
+    @Override
+    public void onClickNext(int currentPosition) {
+
     }
 }
