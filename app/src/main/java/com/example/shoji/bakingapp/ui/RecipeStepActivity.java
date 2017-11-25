@@ -18,26 +18,27 @@ public class RecipeStepActivity
     private static final int INITIAL_STEP_POSITION = 0;
     private static final int POSITION_INVALID = -1;
 
-    private FragmentManager mFragmentManager;
+    private RecipeStepNavButtonFragmentManager mNavButtonFragmentManager;
     private int mStepPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_recipe_step);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mNavButtonFragmentManager = new RecipeStepNavButtonFragmentManager(fragmentManager, R.id.activity_recipe_step_content_body);
 
         mStepPosition = getStepNumberFromSavedInstanceState(savedInstanceState);
         if(mStepPosition == POSITION_INVALID)
             mStepPosition = getPositionFromIntent();
-        RecipeStepFragment stepFragment = prepareStepFragment(mStepPosition);
+        RecipeStepFragment stepFragment = mNavButtonFragmentManager.prepareStepFragment(mStepPosition);
         Timber.d("GOT POSITION: %d", mStepPosition);
 
-        mFragmentManager = getSupportFragmentManager();
 
         if(savedInstanceState == null) {
             Timber.d("Adding the fragment");
-            mFragmentManager.beginTransaction()
+            fragmentManager.beginTransaction()
                     .add(R.id.activity_recipe_step_content_body, stepFragment)
                     .commit();
         }
@@ -58,14 +59,14 @@ public class RecipeStepActivity
     public void onClickPrev(int currentPosition) {
         Timber.d("currentPosition = %d, Tapped prev!", currentPosition);
         mStepPosition -= 1;
-        replaceStepFragment(mStepPosition);
+        mNavButtonFragmentManager.replaceStepFragment(mStepPosition);
     }
 
     @Override
     public void onClickNext(int currentPosition) {
         Timber.d("currentPosition = %d, Tapped next!", currentPosition);
         mStepPosition += 1;
-        replaceStepFragment(mStepPosition);
+        mNavButtonFragmentManager.replaceStepFragment(mStepPosition);
     }
 
     private int getPositionFromIntent() {
@@ -79,23 +80,6 @@ public class RecipeStepActivity
 
         }
         return result;
-    }
-
-    private RecipeStepFragment prepareStepFragment(int position) {
-        Bundle args  = new Bundle();
-        args.putInt(RecipeStepActivity.EXTRA_STEP_NUMBER, position);
-        RecipeStepFragment stepFragment = new RecipeStepFragment();
-        stepFragment.setArguments(args);
-
-        return stepFragment;
-    }
-
-    private void replaceStepFragment(int position) {
-        RecipeStepFragment stepFragment = prepareStepFragment(position);
-
-        mFragmentManager.beginTransaction()
-                .replace(R.id.activity_recipe_step_content_body, stepFragment)
-                .commit();
     }
 
     @Override
