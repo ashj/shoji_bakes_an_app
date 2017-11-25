@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.shoji.bakingapp.R;
@@ -25,6 +26,7 @@ import timber.log.Timber;
 public class RecipeStepFragment extends Fragment
     implements View.OnClickListener {
     private static final String SAVE_INSTANCE_STATE_PLAYER_POSITION = "player_position";
+    private static final String SAVE_INSTANCE_STATE_DESCRIPTION_POSITION = "description_position";
 
     private static final int POSITION_INVALID = -1;
 
@@ -42,6 +44,10 @@ public class RecipeStepFragment extends Fragment
 
     private OnClickNavButtonListener mOnClickHandler;
 
+    private ScrollView mLongDescriptionScrollView;
+    Bundle mSavedInstanceState;
+
+
     public RecipeStepFragment() {
     }
 
@@ -58,6 +64,7 @@ public class RecipeStepFragment extends Fragment
                              @Nullable Bundle savedInstanceState) {
 
         boolean attachToRoot = false;
+        mSavedInstanceState = savedInstanceState;
 
         View rootView = inflater.inflate(
                 R.layout.fragment_recipe_step_list,
@@ -69,7 +76,7 @@ public class RecipeStepFragment extends Fragment
         Timber.d("Got currentPosition -- %d", mStepPosition);
 
 
-        createGeneralViews(rootView);
+        createGeneralViews(rootView, savedInstanceState);
 
         createMediaPlayerView(rootView, savedInstanceState);
 
@@ -102,7 +109,7 @@ public class RecipeStepFragment extends Fragment
 
     }
 
-    private void createGeneralViews(View rootView) {
+    private void createGeneralViews(View rootView, final Bundle state) {
         Timber.d("createViews");
 
         /* fragment_recipe_step_long_description is not defined in phone landscape layout */
@@ -111,11 +118,19 @@ public class RecipeStepFragment extends Fragment
 
 
         if(!mIsPhoneLandscape) {
+            mLongDescriptionScrollView = rootView.findViewById(R.id.fragment_recipe_step_long_description_scrollview);
             mLongDescription.setText(mRecipe.getStepList().get(mStepPosition).getLongDescription());
+
             createNavButtonView(rootView);
 
-        }
+            mLongDescriptionScrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    restoreScrollPosition(state);
+                }
+            });
 
+        }
         Timber.d("NOT NULL?: mPreviousStepButton: %b, mNextStepButton: %b", (mPreviousStepButton !=null), (mNextStepButton!=null));
 
     }
@@ -220,14 +235,39 @@ public class RecipeStepFragment extends Fragment
         super.onSaveInstanceState(outState);
         if(mBakerPlayer != null)
             outState.putLong(SAVE_INSTANCE_STATE_PLAYER_POSITION, mBakerPlayer.onSaveInstanceState());
+        if(mLongDescriptionScrollView != null) {
+            int[] position = new int[]{
+                    mLongDescriptionScrollView.getScrollX(),
+                    mLongDescriptionScrollView.getScrollY() };
+            outState.putIntArray(SAVE_INSTANCE_STATE_DESCRIPTION_POSITION, position);
+            Timber.d("Saved scrollview [from View] pos: %d, %d", position[0], position[1]);
+        }
+        else if(mSavedInstanceState != null && mSavedInstanceState.containsKey(SAVE_INSTANCE_STATE_DESCRIPTION_POSITION)) {
+            int[] position = mSavedInstanceState.getIntArray(SAVE_INSTANCE_STATE_DESCRIPTION_POSITION);
+            outState.putIntArray(SAVE_INSTANCE_STATE_DESCRIPTION_POSITION, position);
+            Timber.d("Saved scrollview [from savedState] pos: %d, %d", position[0], position[1]);
+        }
     }
 
-    public void restoreInstanceState(Bundle state) {
+    private void restoreInstanceState(Bundle state) {
         if(state != null) {
             long position = state.getLong(SAVE_INSTANCE_STATE_PLAYER_POSITION, 0);
             Timber.d("restoreInstanceState - position: %d", position);
             if(position != BakerPlayer.INVALID_POSITION)
             mBakerPlayer.onRestoreInstanceState(position);
         }
+    }
+
+
+
+    private void restoreScrollPosition(Bundle state) {
+        if(mLongDescriptionScrollView != null && state != null && state.containsKey(SAVE_INSTANCE_STATE_DESCRIPTION_POSITION)) {
+            int[] position = state.getIntArray(SAVE_INSTANCE_STATE_DESCRIPTION_POSITION);
+            if(position.length == 2) {
+                mLongDescriptionScrollView.scrollTo(position[0], position[1]);
+                Timber.d("Restored scrollview pos: %d, %d", position[0], position[1]);
+            }
+        }
+
     }
 }
