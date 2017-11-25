@@ -14,9 +14,12 @@ public class RecipeStepActivity
         extends AppCompatActivity
         implements RecipeStepFragment.OnClickNavButtonListener {
     public static final String EXTRA_STEP_NUMBER = "extra-step-number";
+    private static final String SAVE_INSTANCE_STATE_STEP_POSITION = "current_step_position";
     private static final int INITIAL_STEP_POSITION = 0;
+    private static final int POSITION_INVALID = -1;
 
     private FragmentManager mFragmentManager;
+    private int mStepPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,16 +27,27 @@ public class RecipeStepActivity
 
         setContentView(R.layout.activity_recipe_step);
 
-
-        int position = getPositionFromIntent();
-        RecipeStepFragment stepFragment = prepareStepFragment(position);
-        Timber.d("GOT POSITION: %d", position);
+        mStepPosition = getStepNumberFromSavedInstanceState(savedInstanceState);
+        if(mStepPosition == POSITION_INVALID)
+            mStepPosition = getPositionFromIntent();
+        RecipeStepFragment stepFragment = prepareStepFragment(mStepPosition);
+        Timber.d("GOT POSITION: %d", mStepPosition);
 
         mFragmentManager = getSupportFragmentManager();
-        mFragmentManager.beginTransaction()
-                .add(R.id.activity_recipe_step_content_body, stepFragment)
-                .commit();
-    }
+
+        if(savedInstanceState == null) {
+            Timber.d("Adding the fragment");
+            mFragmentManager.beginTransaction()
+                    .add(R.id.activity_recipe_step_content_body, stepFragment)
+                    .commit();
+        }
+        else {
+            Timber.d("Replacing the fragment");
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.activity_recipe_step_content_body, stepFragment)
+                    .commit();
+        }
+     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -49,13 +63,15 @@ public class RecipeStepActivity
     @Override
     public void onClickPrev(int currentPosition) {
         Timber.d("currentPosition = %d, Tapped prev!", currentPosition);
-        replaceStepFragment(currentPosition - 1);
+        mStepPosition -= 1;
+        replaceStepFragment(mStepPosition);
     }
 
     @Override
     public void onClickNext(int currentPosition) {
         Timber.d("currentPosition = %d, Tapped next!", currentPosition);
-        replaceStepFragment(currentPosition + 1);
+        mStepPosition += 1;
+        replaceStepFragment(mStepPosition);
     }
 
     private int getPositionFromIntent() {
@@ -86,5 +102,20 @@ public class RecipeStepActivity
         mFragmentManager.beginTransaction()
                 .replace(R.id.activity_recipe_step_content_body, stepFragment)
                 .commit();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVE_INSTANCE_STATE_STEP_POSITION, mStepPosition);
+    }
+
+    private int getStepNumberFromSavedInstanceState (Bundle savedInstance) {
+        int position = POSITION_INVALID;
+
+        if(savedInstance != null && savedInstance.containsKey(SAVE_INSTANCE_STATE_STEP_POSITION))
+            position = savedInstance.getInt(SAVE_INSTANCE_STATE_STEP_POSITION);
+
+        return position;
     }
 }
