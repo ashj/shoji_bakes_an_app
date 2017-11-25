@@ -1,17 +1,21 @@
 package com.example.shoji.bakingapp.media;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
 
+import com.example.shoji.bakingapp.BuildConfig;
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.ui.RecipeStepFragment;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -37,6 +41,10 @@ import timber.log.Timber;
 
 public class BakerPlayer
     implements ExoPlayer.EventListener {
+    //[START] Android O - notification channel
+    private static final String BAKERPLAYER_CHANNEL_MEDIA_CONTROL_ID = "bakerplayer-media-control-id";
+    private static final String BAKERPLAYER_CHANNEL_MEDIA_CONTROL_NAME = "bakerplayer-media-control-name";
+    //[END] Android O - notification channel
     public static final long INVALID_POSITION = -1;
 
     private Context mContext;
@@ -277,6 +285,20 @@ public class BakerPlayer
                 .setStyle(new NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
                         .setShowActionsInCompactView(0));
+
+        //[START] Android O - notification channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel bakerplayerChannel = new NotificationChannel(
+                    BAKERPLAYER_CHANNEL_MEDIA_CONTROL_ID,
+                    BAKERPLAYER_CHANNEL_MEDIA_CONTROL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            bakerplayerChannel.setLightColor(Color.GREEN);
+            notificationManager.createNotificationChannel(bakerplayerChannel);
+
+            builder.setChannelId(BAKERPLAYER_CHANNEL_MEDIA_CONTROL_ID);
+        }
+        //[END] Android O - notification channel
 
         notificationManager.notify(0, builder.build());
     }
