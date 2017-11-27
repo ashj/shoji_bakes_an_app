@@ -2,8 +2,6 @@ package com.example.shoji.bakingapp.provider;
 
 import android.net.Uri;
 
-import com.example.shoji.bakingapp.pojo.Recipe;
-
 import net.simonvt.schematic.annotation.ContentProvider;
 import net.simonvt.schematic.annotation.ContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
@@ -12,7 +10,7 @@ import net.simonvt.schematic.annotation.TableEndpoint;
         authority = RecipeProvider.AUTHORITY,
         database = RecipeDatabase.class)
 public class RecipeProvider {
-    public static final String AUTHORITY = "com.example.shoji.bakingapp.provider.provider";
+    public static final String AUTHORITY = "com.example.shoji.bakingapp.provider.recipes";
 
     @TableEndpoint(table = RecipeDatabase.TABLE_NAME)
     public static class Recipes {

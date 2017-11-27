@@ -9,6 +9,8 @@ import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.pojo.RecipeIngredient;
 import com.example.shoji.bakingapp.pojo.RecipeStep;
 import com.example.shoji.bakingapp.provider.RecipeContract;
+import com.example.shoji.bakingapp.provider.RecipeIngredientContract;
+import com.example.shoji.bakingapp.provider.RecipeIngredientProvider;
 import com.example.shoji.bakingapp.provider.RecipeProvider;
 
 import org.json.JSONArray;
@@ -167,6 +169,11 @@ public class RecipeJsonUtils {
 
 
     public static void insertRecipesToDb(Context context, ArrayList<Recipe> recipes) {
+        if(recipes == null) {
+            Timber.w("insertRecipesToDb -- recipes=(null)");
+            return;
+        }
+
         for(Recipe recipe : recipes)
             insertRecipeToDb(context, recipe);
     }
@@ -182,12 +189,33 @@ public class RecipeJsonUtils {
 
         Uri uri = contentResolver.insert(RecipeProvider.Recipes.CONTENT_URI, newRecipe);
         String newId = uri.getLastPathSegment();
-        Timber.d("ADDED to DB uri: %s (new id: %s)", uri.toString(), newId);
+        Timber.d("ADDED RECIPE to DB (uri:%s) - %s - %s", newId, recipe.getName(), uri);
 
+        insertRecipeIngreditentsToDb(contentResolver, recipe, newId);
     }
 
     public static void insertRecipeIngreditentsToDb(ContentResolver resolver, Recipe recipe, String recipeUri) {
-        
+        ArrayList<RecipeIngredient> ingredients = recipe.getIngredientList();
+        if(ingredients == null) {
+            Timber.w("insertRecipesToDb -- recipes=(null)");
+            return;
+        }
+
+        for(RecipeIngredient ingredient : ingredients)
+            insertRecipeIngreditentToDb(resolver, ingredient,recipeUri);
     }
 
+    public static void insertRecipeIngreditentToDb(ContentResolver resolver, RecipeIngredient ingredient, String recipeUri) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(RecipeIngredientContract.COLUMN_RECIPE_ID, recipeUri);
+        cv.put(RecipeIngredientContract.COLUMN_QUANTITY, ingredient.getQuantity());
+        cv.put(RecipeIngredientContract.COLUMN_MEASURE, ingredient.getMeasure());
+        cv.put(RecipeIngredientContract.COLUMN_DESCRIPTION, ingredient.getDescription());
+
+        Uri uri = resolver.insert(RecipeIngredientProvider.Ingredients.CONTENT_URI, cv);
+        String newId = uri.getLastPathSegment();
+        Timber.d("ADDED INGREDIENT to DB (uri:%s - %s) - %s", newId, recipeUri, ingredient.getDescription());
+
+    }
 }

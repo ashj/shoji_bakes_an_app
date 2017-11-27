@@ -47,7 +47,17 @@
 
         <provider
             android:name=".provider.generated.RecipeProvider"
-            android:authorities="com.example.shoji.bakingapp.provider.provider"
+            android:authorities="com.example.shoji.bakingapp.provider.recipes"
+            android:exported="false" />
+
+        <provider
+            android:name=".provider.generated.RecipeIngredientProvider"
+            android:authorities="com.example.shoji.bakingapp.provider.ingredients"
+            android:exported="false" />
+
+        <provider
+            android:name=".provider.generated.RecipeStepProvider"
+            android:authorities="com.example.shoji.bakingapp.provider.steps"
             android:exported="false" />
 
     </application>
