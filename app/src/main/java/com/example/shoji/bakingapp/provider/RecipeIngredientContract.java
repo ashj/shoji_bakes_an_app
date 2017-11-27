@@ -14,7 +14,7 @@ public class RecipeIngredientContract {
     @AutoIncrement
     public static final String _ID = "_id";
 
-    @DataType(DataType.Type.TEXT)
+    @DataType(DataType.Type.INTEGER)
     @NotNull
     public static final String COLUMN_RECIPE_ID = "recipe_id";
 

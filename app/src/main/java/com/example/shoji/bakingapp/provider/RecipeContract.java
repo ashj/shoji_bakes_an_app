@@ -15,7 +15,7 @@ public class RecipeContract {
     public static final String _ID = "_id";
 
     /* recipe id provided by network */
-    @DataType(DataType.Type.TEXT)
+    @DataType(DataType.Type.INTEGER)
     @NotNull
     public static final String COLUMN_RECIPE_ID = "recipe_id";
 
