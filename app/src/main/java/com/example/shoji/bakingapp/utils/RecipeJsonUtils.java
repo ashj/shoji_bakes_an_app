@@ -1,21 +1,10 @@
 package com.example.shoji.bakingapp.utils;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.widget.ImageView;
 
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.pojo.RecipeIngredient;
 import com.example.shoji.bakingapp.pojo.RecipeStep;
-import com.example.shoji.bakingapp.provider.RecipeContract;
-import com.example.shoji.bakingapp.provider.RecipeIngredientContract;
-import com.example.shoji.bakingapp.provider.RecipeIngredientProvider;
-import com.example.shoji.bakingapp.provider.RecipeProvider;
-import com.example.shoji.bakingapp.provider.RecipeStepContract;
-import com.example.shoji.bakingapp.provider.RecipeStepProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,9 +41,9 @@ public class RecipeJsonUtils {
         return "";
     }
 
-    public static ArrayList<Recipe> listRecipes(String jsonString) {
-        ArrayList<Recipe> recipeList = new ArrayList<>();
+    public static void listRecipes(Context context, String jsonString) {
         try {
+            String newRecipeUri = null;
             JSONArray jsonArray = new JSONArray(jsonString);
 
             Timber.d("jsonArray length: %d", jsonArray.length());
@@ -74,37 +63,31 @@ public class RecipeJsonUtils {
                 recipe.setServings(servings);
                 recipe.setImage(image);
 
+                newRecipeUri = RecipeProviderUtils.insertRecipeToDb(context, recipe);
+
                 // Get ingredients list
-                ArrayList<RecipeIngredient> ingredientList = null;
                 if(recipeJsonObject.has(JSON_RECIPE_INGREDIENTS)) {
                     JSONArray ingredients = recipeJsonObject.getJSONArray(JSON_RECIPE_INGREDIENTS);
-                    ingredientList = listIngredients(ingredients);
+                    listIngredients(context, ingredients, newRecipeUri);
                 }
-                recipe.setIngredientList(ingredientList);
+
 
                 // Get steps list
-                ArrayList<RecipeStep> stepList = null;
                 if(recipeJsonObject.has(JSON_RECIPE_STEPS)) {
                     JSONArray steps = recipeJsonObject.getJSONArray(JSON_RECIPE_STEPS);
-                    stepList = listSteps(steps);
+                    listSteps(context, steps, newRecipeUri);
                 }
-                recipe.setStepList(stepList);
-
-                recipeList.add(recipe);
 
             }
 
 
         } catch (JSONException e) {
             Timber.e(e.getMessage());
-            return null;
         }
-        return recipeList;
     }
 
 
-    public static ArrayList<RecipeIngredient> listIngredients(JSONArray ingredients) {
-        ArrayList<RecipeIngredient> ingredientList = new ArrayList<>();
+    public static void listIngredients(Context context, JSONArray ingredients, String recipeUriId) {
         try {
             for (int i = 0; i < ingredients.length(); ++i) {
                 JSONObject ingredient = ingredients.getJSONObject(i);
@@ -119,21 +102,18 @@ public class RecipeJsonUtils {
                 recipeIngredient.setMeasure(measure);
                 recipeIngredient.setQuantity(quantity);
 
-                ingredientList.add(recipeIngredient);
-
-//                Timber.d("ingredient(%d): %s ; measure: %s ; quantity: %s",
-//                        i, description, measure, quantity);
+                RecipeProviderUtils.insertRecipeIngreditentToDb(
+                        context.getContentResolver(),
+                        recipeIngredient,
+                        recipeUriId);
             }
         } catch (JSONException e) {
             Timber.e(e.getMessage());
-            return null;
         }
-        return ingredientList;
     }
 
 
-    public static ArrayList<RecipeStep> listSteps(JSONArray steps) {
-        ArrayList<RecipeStep> stepList = new ArrayList<>();
+    public static void listSteps(Context context, JSONArray steps, String recipeUriId) {
         try {
             for (int i = 0; i < steps.length(); ++i) {
                 JSONObject step = steps.getJSONObject(i);
@@ -152,23 +132,12 @@ public class RecipeJsonUtils {
                 recipeStep.setThumbnailUrl(thumbnail_url);
                 recipeStep.setVideoUrl(video_url);
 
-//                Timber.d("step((%s))(%d): short_description: %s",
-//                        id, i, short_description);
-//                Timber.d("step((%s))(%d): long_description: %s",
-//                        id, i, long_description);
-//                Timber.d("step((%s))(%d): video_url: %s",
-//                        id, i, video_url);
-//                Timber.d("step((%s))(%d): thumbnail_url: %s",
-//                        id, i, thumbnail_url);
-
-                stepList.add(recipeStep);
+                RecipeProviderUtils.insertRecipeStepToDb(context.getContentResolver(),
+                        recipeStep, recipeUriId);
             }
         } catch (JSONException e) {
             Timber.e(e.getMessage());
-            return null;
         }
-
-        return stepList;
     }
 
 

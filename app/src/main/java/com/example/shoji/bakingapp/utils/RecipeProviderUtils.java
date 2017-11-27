@@ -32,7 +32,7 @@ public class RecipeProviderUtils {
             insertRecipeToDb(context, recipe);
     }
 
-    public static void insertRecipeToDb(Context context, Recipe recipe) {
+    public static String insertRecipeToDb(Context context, Recipe recipe) {
         ContentResolver contentResolver = context.getContentResolver();
 
         ContentValues newRecipe = new ContentValues();
@@ -45,8 +45,7 @@ public class RecipeProviderUtils {
         String newId = uri.getLastPathSegment();
         Timber.d("ADDED RECIPE to DB (uri:%s) - %s - %s", newId, recipe.getName(), uri);
 
-        insertRecipeIngreditentsToDb(contentResolver, recipe, newId);
-        insertRecipeStepsToDb(contentResolver, recipe, newId);
+        return newId;
     }
 
     public static void insertRecipeIngreditentsToDb(ContentResolver resolver, Recipe recipe, String recipeUri) {
@@ -103,7 +102,7 @@ public class RecipeProviderUtils {
 
     }
 
-    //TEST
+
     public static Recipe getRecipeFromDb(Context context, String recipeUriId) {
         Recipe recipe = null;
         ContentResolver resolver = context.getContentResolver();
@@ -203,5 +202,26 @@ public class RecipeProviderUtils {
         }
 
         return steps;
+    }
+
+    public static ArrayList<Recipe> getRecipesFromDb(Context context) {
+        ArrayList<Recipe> recipes = null;
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = resolver.query(RecipeProvider.Recipes.CONTENT_URI,
+                null,
+                null,
+                null, null);
+
+        if(cursor != null) {
+            recipes = new ArrayList<>();
+            while(cursor.moveToNext()) {
+                String recipeUriId = cursor.getString(cursor.getColumnIndex(RecipeContract._ID));
+                Timber.d("getRecipesFromDb, uri: %s", recipeUriId);
+                recipes.add(getRecipeFromDb(context, recipeUriId));
+            }
+            cursor.close();
+        }
+
+        return recipes;
     }
 }

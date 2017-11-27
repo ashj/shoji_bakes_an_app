@@ -35,13 +35,11 @@ public class FetchRecipesListener
         //Timber.d("FetchRecipesListener -- got json: %s", result);
         ArrayList<Recipe> result = null;
 
-        if(jsonString != null)
-            result = RecipeJsonUtils.listRecipes(jsonString);
-
-        if(result != null) {
-            RecipeProviderUtils.insertRecipesToDb(context, result);
-            RecipeProviderUtils.getRecipeFromDb(context, "1");
+        if(jsonString != null) {
+            RecipeJsonUtils.listRecipes(context, jsonString);
+            result = RecipeProviderUtils.getRecipesFromDb(context);
         }
+
         return result;
     }
 
