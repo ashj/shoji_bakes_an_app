@@ -39,6 +39,9 @@ public class FetchRecipesListener
         if(jsonString != null)
             result = RecipeJsonUtils.listRecipes(jsonString);
 
+        if(result != null) {
+            RecipeJsonUtils.insertRecipesToDb(context, result);
+        }
         return result;
     }
 

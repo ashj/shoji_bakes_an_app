@@ -1,8 +1,15 @@
 package com.example.shoji.bakingapp.utils;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.Uri;
+
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.pojo.RecipeIngredient;
 import com.example.shoji.bakingapp.pojo.RecipeStep;
+import com.example.shoji.bakingapp.provider.RecipeContract;
+import com.example.shoji.bakingapp.provider.RecipeProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -158,5 +165,29 @@ public class RecipeJsonUtils {
         return stepList;
     }
 
+
+    public static void insertRecipesToDb(Context context, ArrayList<Recipe> recipes) {
+        for(Recipe recipe : recipes)
+            insertRecipeToDb(context, recipe);
+    }
+
+    public static void insertRecipeToDb(Context context, Recipe recipe) {
+        ContentResolver contentResolver = context.getContentResolver();
+
+        ContentValues newRecipe = new ContentValues();
+        newRecipe.put(RecipeContract.COLUMN_RECIPE_ID, recipe.getId());
+        newRecipe.put(RecipeContract.COLUMN_NAME, recipe.getName());
+        newRecipe.put(RecipeContract.COLUMN_SERVINGS, recipe.getServings());
+        newRecipe.put(RecipeContract.COLUMN_IMAGE, recipe.getImage());
+
+        Uri uri = contentResolver.insert(RecipeProvider.Recipes.CONTENT_URI, newRecipe);
+        String newId = uri.getLastPathSegment();
+        Timber.d("ADDED to DB uri: %s (new id: %s)", uri.toString(), newId);
+
+    }
+
+    public static void insertRecipeIngreditentsToDb(ContentResolver resolver, Recipe recipe, String recipeUri) {
+        
+    }
 
 }
