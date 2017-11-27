@@ -12,6 +12,8 @@ import com.example.shoji.bakingapp.provider.RecipeContract;
 import com.example.shoji.bakingapp.provider.RecipeIngredientContract;
 import com.example.shoji.bakingapp.provider.RecipeIngredientProvider;
 import com.example.shoji.bakingapp.provider.RecipeProvider;
+import com.example.shoji.bakingapp.provider.RecipeStepContract;
+import com.example.shoji.bakingapp.provider.RecipeStepProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -192,6 +194,7 @@ public class RecipeJsonUtils {
         Timber.d("ADDED RECIPE to DB (uri:%s) - %s - %s", newId, recipe.getName(), uri);
 
         insertRecipeIngreditentsToDb(contentResolver, recipe, newId);
+        insertRecipeStepsToDb(contentResolver, recipe, newId);
     }
 
     public static void insertRecipeIngreditentsToDb(ContentResolver resolver, Recipe recipe, String recipeUri) {
@@ -216,6 +219,35 @@ public class RecipeJsonUtils {
         Uri uri = resolver.insert(RecipeIngredientProvider.Ingredients.CONTENT_URI, cv);
         String newId = uri.getLastPathSegment();
         Timber.d("ADDED INGREDIENT to DB (uri:%s - %s) - %s", newId, recipeUri, ingredient.getDescription());
+
+    }
+
+
+    public static void insertRecipeStepsToDb(ContentResolver resolver, Recipe recipe, String recipeUri) {
+        ArrayList<RecipeStep> steps = recipe.getStepList();
+        if(steps == null) {
+            Timber.w("insertRecipesToDb -- recipes=(null)");
+            return;
+        }
+
+        for(RecipeStep step : steps)
+            insertRecipeStepToDb(resolver, step, recipeUri);
+    }
+
+    public static void insertRecipeStepToDb(ContentResolver resolver, RecipeStep step, String recipeUri) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(RecipeStepContract.COLUMN_RECIPE_ID, recipeUri);
+        cv.put(RecipeStepContract.COLUMN_STEP_ID, step.getId());
+        cv.put(RecipeStepContract.COLUMN_SHORT_DESCRIPTION, step.getShortDescription());
+        cv.put(RecipeStepContract.COLUMN_LONG_DESCRIPTION, step.getLongDescription());
+        cv.put(RecipeStepContract.COLUMN_VIDEO_URL, step.getVideoUrl());
+        cv.put(RecipeStepContract.COLUMN_THUMBNAIL_URL, step.getThumbnailUrl());
+
+        Uri uri = resolver.insert(RecipeStepProvider.Steps.CONTENT_URI, cv);
+
+        String newId = uri.getLastPathSegment();
+        Timber.d("ADDED STEP to DB (uri:%s - %s) - %s. %s", newId, recipeUri, step.getId(), step.getShortDescription());
 
     }
 }
