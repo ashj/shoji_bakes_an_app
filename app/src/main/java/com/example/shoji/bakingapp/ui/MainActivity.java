@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import com.example.shoji.bakingapp.BuildConfig;
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.backgroundtask.FetchRecipesListener;
+import com.example.shoji.bakingapp.backgroundtask.QueryRecipesListener;
 import com.example.shoji.bakingapp.data.RecipesListAdapter;
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.utils.BakerUtils;
@@ -24,6 +25,7 @@ import timber.log.Timber;
 public class MainActivity
         extends AppCompatActivityEx
         implements FetchRecipesListener.OnLoadFinishedListener,
+                    QueryRecipesListener.OnLoadFinishedListener,
                     RecipesListAdapter.OnClickListener {
     private static final String SAVE_INSTANCE_STATE_RECIPE_DATA = "recipe-data";
     private final static String SAVE_INSTANCE_STATE_LIST_POSITION = "list-position";
@@ -91,8 +93,14 @@ public class MainActivity
 
     @Override
     public void onFetchRecipesFinished(ArrayList<Recipe> result) {
+        BakerUtils.queryRecipes(this, getSupportLoaderManager(), this);
+    }
+
+    @Override
+    public void onQueryRecipesFinished(ArrayList<Recipe> result) {
         swapAdapterData(result);
     }
+
 
     public void swapAdapterData(ArrayList<Recipe> newRecipeList) {
         mRecipeListAdapter.setRecipeList(newRecipeList);
@@ -143,5 +151,6 @@ public class MainActivity
         outState.putParcelableArrayList(SAVE_INSTANCE_STATE_RECIPE_DATA,
                 mRecipeListAdapter.getRecipeList());
     }
+
 
 }

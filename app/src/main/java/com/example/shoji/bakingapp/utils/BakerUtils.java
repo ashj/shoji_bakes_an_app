@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import com.example.shoji.bakingapp.backgroundtask.FetchRecipesListener;
 import com.example.shoji.bakingapp.backgroundtask.LoaderCallBacksEx;
 import com.example.shoji.bakingapp.backgroundtask.LoaderID;
+import com.example.shoji.bakingapp.backgroundtask.QueryRecipesListener;
 import com.example.shoji.bakingapp.pojo.Recipe;
 
 import java.util.ArrayList;
@@ -22,6 +23,24 @@ public class BakerUtils {
         Bundle args = null;
 
         FetchRecipesListener fetchRecipesHandler = new FetchRecipesListener(onLoadFinishedHandler);
+
+        LoaderCallBacksEx<ArrayList<Recipe>> recipeLoaderCallBacks =
+                new LoaderCallBacksEx<>(context, fetchRecipesHandler);
+
+        LoaderCallBackUtils.initOrRestartLoader(
+                loaderId,
+                args,
+                loaderManager,
+                recipeLoaderCallBacks);
+    }
+
+    synchronized public static void queryRecipes(Context context,
+                                                 LoaderManager loaderManager,
+                                                 QueryRecipesListener.OnLoadFinishedListener onLoadFinishedHandler) {
+        int loaderId = LoaderID.LOADER_ID_FETCH_RECIPES;
+        Bundle args = null;
+
+        QueryRecipesListener fetchRecipesHandler = new QueryRecipesListener(onLoadFinishedHandler);
 
         LoaderCallBacksEx<ArrayList<Recipe>> recipeLoaderCallBacks =
                 new LoaderCallBacksEx<>(context, fetchRecipesHandler);
