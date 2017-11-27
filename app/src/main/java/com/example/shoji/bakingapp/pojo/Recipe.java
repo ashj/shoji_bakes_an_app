@@ -105,9 +105,9 @@ public class Recipe implements Parcelable {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("recipe id: ").append(mId)
-                .append("\nname: ").append(mName).append("\n")
-                .append("\nservings: ").append(mServings).append("\n")
-                .append("\nimage: ").append(mImage).append("\n");
+                .append("\nname: ").append(mName)
+                .append("\nservings: ").append(mServings)
+                .append("\nimage: ").append(mImage).append("\n\n");
         if(mIngredientList != null) {
             for (int i = 0; i < mIngredientList.size(); i++)
                 sb.append(mIngredientList.get(i).toString()).append("\n");
