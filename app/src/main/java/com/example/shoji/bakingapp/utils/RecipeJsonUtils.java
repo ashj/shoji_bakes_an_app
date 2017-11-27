@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 import timber.log.Timber;
@@ -45,19 +46,23 @@ public class RecipeJsonUtils {
         try {
             String newRecipeUri = null;
             JSONArray jsonArray = new JSONArray(jsonString);
+            ArrayList<String> recipesIdInDb = RecipeProviderUtils.getRecipesIdFromDb(context);
 
             Timber.d("jsonArray length: %d", jsonArray.length());
             for(int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject recipeJsonObject = jsonArray.getJSONObject(i);
 
-                Recipe recipe = new Recipe();
-
                 String id = getString(recipeJsonObject, JSON_RECIPE_ID);
+                if(recipesIdInDb.contains(id)) {
+                    Timber.d("Do not add same recipeId: %s", id);
+                    continue;
+                }
                 String name = getString(recipeJsonObject, JSON_RECIPE_NAME);
                 String servings = getString(recipeJsonObject, JSON_RECIPE_SERVINGS);
                 String image = getString(recipeJsonObject, JSON_RECIPE_IMAGE);
 //                Timber.d("recipe id: %s / recipe name: %s", id, name);
 
+                Recipe recipe = new Recipe();
                 recipe.setId(id);
                 recipe.setName(name);
                 recipe.setServings(servings);

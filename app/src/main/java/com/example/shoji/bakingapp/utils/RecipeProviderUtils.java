@@ -17,6 +17,7 @@ import com.example.shoji.bakingapp.provider.RecipeStepContract;
 import com.example.shoji.bakingapp.provider.RecipeStepProvider;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -131,6 +132,26 @@ public class RecipeProviderUtils {
         }
 
         return recipe;
+    }
+
+    public static ArrayList<String> getRecipesIdFromDb(Context context) {
+        ArrayList<String> recipesId = null;
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = resolver.query(RecipeProvider.Recipes.CONTENT_URI,
+                null,
+                null,
+                null, null);
+
+        if(cursor != null) {
+            recipesId = new ArrayList<>();
+            while(cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(RecipeContract.COLUMN_RECIPE_ID));
+                recipesId.add(id);
+            }
+            cursor.close();
+        }
+
+        return recipesId;
     }
 
     public static ArrayList<RecipeIngredient> getIngredientsFromDb(Context context, String recipeUriId) {
