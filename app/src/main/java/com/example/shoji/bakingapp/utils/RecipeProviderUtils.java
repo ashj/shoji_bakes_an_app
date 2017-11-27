@@ -126,8 +126,10 @@ public class RecipeProviderUtils {
             recipe.setIngredientList(getIngredientsFromDb(context, recipeUriId));
             recipe.setStepList(getStepsFromDb(context, recipeUriId));
             Timber.d("Queried: %s", recipe.toString());
+
+            cursor.close();
         }
-        cursor.close();
+
         return recipe;
     }
 
@@ -158,7 +160,7 @@ public class RecipeProviderUtils {
 
                 ingredients.add(ingredient);
             }
-
+            cursor.close();
         }
 
         return ingredients;
@@ -198,7 +200,7 @@ public class RecipeProviderUtils {
 
                 steps.add(step);
             }
-
+            cursor.close();
         }
 
         return steps;
