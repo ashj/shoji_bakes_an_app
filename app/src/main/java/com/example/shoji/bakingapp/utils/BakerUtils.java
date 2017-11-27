@@ -24,7 +24,7 @@ public class BakerUtils {
 
         FetchRecipesListener fetchRecipesHandler = new FetchRecipesListener(onLoadFinishedHandler);
 
-        LoaderCallBacksEx<ArrayList<Recipe>> recipeLoaderCallBacks =
+        LoaderCallBacksEx<Void> recipeLoaderCallBacks =
                 new LoaderCallBacksEx<>(context, fetchRecipesHandler);
 
         LoaderCallBackUtils.initOrRestartLoader(
@@ -40,10 +40,10 @@ public class BakerUtils {
         int loaderId = LoaderID.LOADER_ID_FETCH_RECIPES;
         Bundle args = null;
 
-        QueryRecipesListener fetchRecipesHandler = new QueryRecipesListener(onLoadFinishedHandler);
+        QueryRecipesListener queryRecipesHandler = new QueryRecipesListener(onLoadFinishedHandler);
 
         LoaderCallBacksEx<ArrayList<Recipe>> recipeLoaderCallBacks =
-                new LoaderCallBacksEx<>(context, fetchRecipesHandler);
+                new LoaderCallBacksEx<>(context, queryRecipesHandler);
 
         LoaderCallBackUtils.initOrRestartLoader(
                 loaderId,

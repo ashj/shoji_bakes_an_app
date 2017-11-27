@@ -58,8 +58,7 @@ public class MainActivity
                 BakerUtils.fetchRecipes(this, getSupportLoaderManager(), this);
             }
             else {
-                showSnackbar(R.id.activity_main_recipes_recycler_view,
-                        R.string.error_no_network_short, Snackbar.LENGTH_LONG);
+                BakerUtils.queryRecipes(this, getSupportLoaderManager(), this);
             }
         }
     }
@@ -91,14 +90,21 @@ public class MainActivity
 
     }
 
+    /* after json fetching is finished */
     @Override
-    public void onFetchRecipesFinished(ArrayList<Recipe> result) {
+    public void onFetchRecipesFinished() {
         BakerUtils.queryRecipes(this, getSupportLoaderManager(), this);
     }
 
+    /* after db query is finished */
     @Override
     public void onQueryRecipesFinished(ArrayList<Recipe> result) {
-        swapAdapterData(result);
+        if(result == null || result.size() == 0) {
+            showSnackbar(R.id.activity_main_recipes_recycler_view,
+                    R.string.error_no_network_short, Snackbar.LENGTH_LONG);
+        }
+        else
+            swapAdapterData(result);
     }
 
 
