@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.example.shoji.bakingapp.pojo.Recipe;
+import com.example.shoji.bakingapp.provider.RecipeProvider;
 import com.example.shoji.bakingapp.utils.NetworkUtils;
 import com.example.shoji.bakingapp.utils.RecipeJsonUtils;
+import com.example.shoji.bakingapp.utils.RecipeProviderUtils;
 
 import java.util.ArrayList;
 
@@ -40,8 +42,8 @@ public class FetchRecipesListener
             result = RecipeJsonUtils.listRecipes(jsonString);
 
         if(result != null) {
-            RecipeJsonUtils.insertRecipesToDb(context, result);
-            RecipeJsonUtils.getRecipeFromProvider(context, "1");
+            RecipeProviderUtils.insertRecipesToDb(context, result);
+            RecipeProviderUtils.getRecipeFromProvider(context, "1");
         }
         return result;
     }
