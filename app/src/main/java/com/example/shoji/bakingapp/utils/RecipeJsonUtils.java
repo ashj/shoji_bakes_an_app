@@ -3,7 +3,9 @@ package com.example.shoji.bakingapp.utils;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.widget.ImageView;
 
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.pojo.RecipeIngredient;
@@ -249,5 +251,107 @@ public class RecipeJsonUtils {
         String newId = uri.getLastPathSegment();
         Timber.d("ADDED STEP to DB (uri:%s - %s) - %s. %s", newId, recipeUri, step.getId(), step.getShortDescription());
 
+    }
+
+    //TEST
+    public static Recipe getRecipeFromProvider(Context context, String recipeUriId) {
+        Recipe recipe = null;
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = resolver.query(RecipeProvider.Recipes.CONTENT_URI,
+                null,
+                RecipeContract._ID + "=" + recipeUriId,
+                null, null);
+
+        if(cursor != null && cursor.moveToNext()) {
+            String name = cursor.getString(cursor.getColumnIndex(RecipeContract.COLUMN_NAME));
+            String id = cursor.getString(cursor.getColumnIndex(RecipeContract.COLUMN_RECIPE_ID));
+            String servings = cursor.getString(cursor.getColumnIndex(RecipeContract.COLUMN_SERVINGS));
+            String image = cursor.getString(cursor.getColumnIndex(RecipeContract.COLUMN_IMAGE));
+
+            recipe = new Recipe();
+            recipe.setId(id);
+            recipe.setName(name);
+            recipe.setServings(servings);
+            recipe.setImage(image);
+
+            recipe.setIngredientList(getIngredientsFromProvider(context, recipeUriId));
+            recipe.setStepList(getStepsFromProvider(context, recipeUriId));
+            Timber.d("Queried: %s", recipe.toString());
+        }
+        cursor.close();
+        return recipe;
+    }
+
+    public static ArrayList<RecipeIngredient> getIngredientsFromProvider(Context context, String recipeUriId) {
+        ArrayList<RecipeIngredient> ingredients = null;
+
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = resolver.query(RecipeIngredientProvider.Ingredients.CONTENT_URI,
+                null,
+                RecipeIngredientContract.COLUMN_RECIPE_ID + "=" + recipeUriId,
+                null, null);
+
+        if(cursor != null) {
+            ingredients = new ArrayList<>();
+            while(cursor.moveToNext()) {
+                RecipeIngredient ingredient = new RecipeIngredient();
+
+                String quantity =
+                        cursor.getString(cursor.getColumnIndex(RecipeIngredientContract.COLUMN_QUANTITY));
+                String measure =
+                        cursor.getString(cursor.getColumnIndex(RecipeIngredientContract.COLUMN_MEASURE));
+                String description =
+                        cursor.getString(cursor.getColumnIndex(RecipeIngredientContract.COLUMN_DESCRIPTION));
+
+                ingredient.setQuantity(quantity);
+                ingredient.setMeasure(measure);
+                ingredient.setDescription(description);
+
+                ingredients.add(ingredient);
+            }
+
+        }
+
+        return ingredients;
+    }
+
+
+    public static ArrayList<RecipeStep> getStepsFromProvider(Context context, String recipeUriId) {
+        ArrayList<RecipeStep> steps = null;
+
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = resolver.query(RecipeStepProvider.Steps.CONTENT_URI,
+                null,
+                RecipeStepContract.COLUMN_RECIPE_ID + "=" + recipeUriId,
+                null, null);
+
+        if (cursor != null) {
+            steps = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                RecipeStep step = new RecipeStep();
+
+                String id =
+                        cursor.getString(cursor.getColumnIndex(RecipeStepContract.COLUMN_STEP_ID));
+                String shortDescription =
+                        cursor.getString(cursor.getColumnIndex(RecipeStepContract.COLUMN_SHORT_DESCRIPTION));
+                String longDescription =
+                        cursor.getString(cursor.getColumnIndex(RecipeStepContract.COLUMN_LONG_DESCRIPTION));
+                String videoUrl =
+                        cursor.getString(cursor.getColumnIndex(RecipeStepContract.COLUMN_VIDEO_URL));
+                String thumbnailUrl =
+                        cursor.getString(cursor.getColumnIndex(RecipeStepContract.COLUMN_THUMBNAIL_URL));
+
+                step.setId(id);
+                step.setShortDescription(shortDescription);
+                step.setLongDescription(longDescription);
+                step.setVideoUrl(videoUrl);
+                step.setThumbnailUrl(thumbnailUrl);
+
+                steps.add(step);
+            }
+
+        }
+
+        return steps;
     }
 }

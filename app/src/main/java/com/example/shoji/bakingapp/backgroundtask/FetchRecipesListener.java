@@ -41,6 +41,7 @@ public class FetchRecipesListener
 
         if(result != null) {
             RecipeJsonUtils.insertRecipesToDb(context, result);
+            RecipeJsonUtils.getRecipeFromProvider(context, "1");
         }
         return result;
     }

@@ -18,7 +18,7 @@ public class RecipeProvider {
         @ContentUri(
                 path = PATH,
                 type = "vnd.android.cursor.dir/" + PATH,
-                defaultSort = RecipeContract._ID + " DESC")
+                defaultSort = RecipeContract._ID + " ASC")
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + PATH);
 
     }
