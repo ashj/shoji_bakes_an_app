@@ -104,7 +104,7 @@ public class RecipeProviderUtils {
     }
 
     //TEST
-    public static Recipe getRecipeFromProvider(Context context, String recipeUriId) {
+    public static Recipe getRecipeFromDb(Context context, String recipeUriId) {
         Recipe recipe = null;
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(RecipeProvider.Recipes.CONTENT_URI,
@@ -124,15 +124,15 @@ public class RecipeProviderUtils {
             recipe.setServings(servings);
             recipe.setImage(image);
 
-            recipe.setIngredientList(getIngredientsFromProvider(context, recipeUriId));
-            recipe.setStepList(getStepsFromProvider(context, recipeUriId));
+            recipe.setIngredientList(getIngredientsFromDb(context, recipeUriId));
+            recipe.setStepList(getStepsFromDb(context, recipeUriId));
             Timber.d("Queried: %s", recipe.toString());
         }
         cursor.close();
         return recipe;
     }
 
-    public static ArrayList<RecipeIngredient> getIngredientsFromProvider(Context context, String recipeUriId) {
+    public static ArrayList<RecipeIngredient> getIngredientsFromDb(Context context, String recipeUriId) {
         ArrayList<RecipeIngredient> ingredients = null;
 
         ContentResolver resolver = context.getContentResolver();
@@ -166,7 +166,7 @@ public class RecipeProviderUtils {
     }
 
 
-    public static ArrayList<RecipeStep> getStepsFromProvider(Context context, String recipeUriId) {
+    public static ArrayList<RecipeStep> getStepsFromDb(Context context, String recipeUriId) {
         ArrayList<RecipeStep> steps = null;
 
         ContentResolver resolver = context.getContentResolver();

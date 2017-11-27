@@ -4,14 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.example.shoji.bakingapp.pojo.Recipe;
-import com.example.shoji.bakingapp.provider.RecipeProvider;
 import com.example.shoji.bakingapp.utils.NetworkUtils;
 import com.example.shoji.bakingapp.utils.RecipeJsonUtils;
 import com.example.shoji.bakingapp.utils.RecipeProviderUtils;
 
 import java.util.ArrayList;
-
-import timber.log.Timber;
 
 public class FetchRecipesListener
         implements LoaderCallBacksListenersInterface<ArrayList<Recipe>> {
@@ -43,7 +40,7 @@ public class FetchRecipesListener
 
         if(result != null) {
             RecipeProviderUtils.insertRecipesToDb(context, result);
-            RecipeProviderUtils.getRecipeFromProvider(context, "1");
+            RecipeProviderUtils.getRecipeFromDb(context, "1");
         }
         return result;
     }
