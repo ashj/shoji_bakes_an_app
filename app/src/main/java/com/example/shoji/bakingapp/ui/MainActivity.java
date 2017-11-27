@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.shoji.bakingapp.BuildConfig;
 import com.example.shoji.bakingapp.R;
@@ -30,6 +32,8 @@ public class MainActivity
     private static final String SAVE_INSTANCE_STATE_RECIPE_DATA = "recipe-data";
     private final static String SAVE_INSTANCE_STATE_LIST_POSITION = "list-position";
 
+    private ProgressBar mProgressBar;
+
     private boolean mIsTabletMode;
     private RecipesListAdapter mRecipeListAdapter;
     private RecyclerView mRecipeListRecyclerView;
@@ -48,12 +52,14 @@ public class MainActivity
         /* check if sw600dp layout was loaded. If so, it will enable table mode */
         mIsTabletMode = (findViewById(R.id.activity_main_sw600dp_layout) != null);
 
+        mProgressBar = findViewById(R.id.activity_main_progressbar);
         createRecipesListRecyclerView();
 
         if(containsSavedInstanceState(savedInstanceState)) {
             restoreListInstanceState(savedInstanceState);
         }
         else {
+            mProgressBar.setVisibility(View.VISIBLE);
             if(NetworkUtils.isNetworkConnected(this)) {
                 BakerUtils.fetchRecipes(this, getSupportLoaderManager(), this);
             }
@@ -99,6 +105,8 @@ public class MainActivity
     /* after db query is finished */
     @Override
     public void onQueryRecipesFinished(ArrayList<Recipe> result) {
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         if(result == null || result.size() == 0) {
             showSnackbar(R.id.activity_main_recipes_recycler_view,
                     R.string.error_no_network_short, Snackbar.LENGTH_LONG);
