@@ -18,5 +18,5 @@
     <dimen name="recipes_list_text_size">40sp</dimen>
 
     <dimen name="recipe_details_text_size">30sp</dimen>
-
+    <dimen name="recipe_servings_text_size">24sp</dimen>
 </resources>

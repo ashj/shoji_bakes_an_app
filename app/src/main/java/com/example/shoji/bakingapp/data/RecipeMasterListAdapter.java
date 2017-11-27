@@ -17,6 +17,7 @@ public class RecipeMasterListAdapter
 {
     private static final int ITEMVIEWTYPE_RECIPE_INGREDIENT = 0;
     private static final int ITEMVIEWTYPE_RECIPE_STEP = 1;
+    private static final int ITEMVIEWTYPE_RECIPE_SERVINGS = 2;
     private static final int ITEMVIEWTYPE_UNKNOWN = -1;
 
     private Context mContext;
@@ -42,19 +43,40 @@ public class RecipeMasterListAdapter
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Timber.d("onCreateViewHolder");
         boolean attachToRoot = false;
-        View itemView = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.recipe_details_adapter_item, parent, attachToRoot);
-
-        SimpleViewHolder.OnClickListener onClickHandler = this;
-
-        return new SimpleViewHolder(itemView, R.id.recipe_adapter_title_tv, onClickHandler);
+        final int INVALID = -1;
+        int layoutResId = INVALID;
+        switch (viewType) {
+            case ITEMVIEWTYPE_RECIPE_SERVINGS:
+                layoutResId = R.layout.recipe_serving_adapter_item;
+                break;
+            case ITEMVIEWTYPE_RECIPE_INGREDIENT:
+            case ITEMVIEWTYPE_RECIPE_STEP:
+                layoutResId = R.layout.recipe_details_adapter_item;
+                break;
+                default:
+                    break;
+        }
+        SimpleViewHolder viewHolder = null;
+        if(layoutResId != INVALID) {
+            View itemView = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(layoutResId, parent, attachToRoot);
+            SimpleViewHolder.OnClickListener onClickHandler = this;
+            viewHolder = new SimpleViewHolder(itemView, R.id.recipe_adapter_title_tv, onClickHandler);
+        }
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         int viewType = getItemViewType(position);
         switch(viewType) {
+            case ITEMVIEWTYPE_RECIPE_SERVINGS:
+                String text = mContext.getString(R.string.recipe_servings,mRecipe.getServings());
+                Timber.d("onBindViewHolder, pos %d, ITEMVIEWTYPE_RECIPE_SERVINGS", position);
+                holder.bindViewHolder(text);
+                break;
+
             case ITEMVIEWTYPE_RECIPE_INGREDIENT:
                 Timber.d("onBindViewHolder, pos %d, ITEMVIEWTYPE_RECIPE_INGREDIENT", position);
                 holder.bindViewHolder(mContext.getString(R.string.ingredients_list));
@@ -75,16 +97,16 @@ public class RecipeMasterListAdapter
 
 
     private int getPositionOffset(int position) {
-        int offsetPosition = position - 1;
+        int offsetPosition = position - 2; // count servings
         if(mRecipe.getIngredientList() == null || mRecipe.getIngredientList().size() == 0){
-            offsetPosition = position;
+            offsetPosition = position - 1; //discount ingredients
         }
         return offsetPosition;
     }
 
     @Override
     public int getItemCount() {
-        int totalCount = 0;
+        int totalCount = 1; // count servings
         if(mRecipe != null) {
             if(mRecipe.getIngredientList() != null &&
                     mRecipe.getIngredientList().size() != 0) {
@@ -111,30 +133,42 @@ public class RecipeMasterListAdapter
     @Override
     public int getItemViewType(int position) {
         int viewType = ITEMVIEWTYPE_UNKNOWN;
-        int startingStepPosition = 1;
+        int serving_startPos = 0;
+        int serving_endPos = serving_startPos + 1;
 
-        int numIngredients = 0;
+        int ingredients_startPos = serving_endPos;
+        int ingredients_endPos;
+
+        int steps_startPos;
+        int steps_endPos;
+
+        ingredients_endPos = ingredients_startPos;
         if(mRecipe.getIngredientList() != null &&
                 mRecipe.getIngredientList().size() != 0) {
             /* use just 1 position instead of list size */
-            numIngredients = 1;
+            ingredients_endPos += 1;
         }
-        else {
-            /* no ingredient list, shift steps position */
-            startingStepPosition = 0;
-        }
-
-        int numSteps = 0;
+        steps_startPos = ingredients_endPos;
+        steps_endPos = steps_startPos;
         if(mRecipe.getStepList() != null) {
-            numSteps = mRecipe.getStepList().size();
+            steps_endPos += mRecipe.getStepList().size() + 1;
         }
 
-        if((numIngredients == 1) && (position == 0)) {
+        Timber.d("getItemViewType - POSITION: %d", position);
+        Timber.d("getItemViewType - serving: [%d, %d[", serving_startPos, serving_endPos);
+        Timber.d("getItemViewType - ingred : [%d, %d[", ingredients_startPos, ingredients_endPos);
+        Timber.d("getItemViewType - step   : [%d, %d[", steps_startPos, steps_endPos);
+
+        if(position == 0) {
+            Timber.d("getItemViewType pos: %d - ITEMVIEWTYPE_RECIPE_SERVINGS", position);
+            viewType = ITEMVIEWTYPE_RECIPE_SERVINGS;
+        }
+        else if((ingredients_startPos <= position) && (position < ingredients_endPos)) {
             Timber.d("getItemViewType pos: %d - ITEMVIEWTYPE_RECIPE_INGREDIENT", position);
             viewType = ITEMVIEWTYPE_RECIPE_INGREDIENT;
         }
-        else if((numSteps != 0) && (startingStepPosition <= position) && (position <= numSteps)) {
-            Timber.d("getItemViewType pos %d - ITEMVIEWTYPE_RECIPE_STEP", position);
+        else if((steps_startPos <= position) && (position < steps_endPos)) {
+            Timber.d("getItemViewType pos: %d - ITEMVIEWTYPE_RECIPE_STEP", position);
             viewType = ITEMVIEWTYPE_RECIPE_STEP;
         }
 

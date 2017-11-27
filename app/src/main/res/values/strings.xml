@@ -1,10 +1,12 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Baking App</string>
 
+    <string name="tool_serving_title">255 servings</string>
     <string name="tool_recipe_title">Recipe</string>
     <string name="tool_recipe_media_player_view">(MEDIA PLAYER)</string>
     <string name="tool_recipe_long_description">Lorem ipsum</string>
 
+    <string name="recipe_servings"><xliff:g>%1$s</xliff:g> servings</string>
     <string name="ingredients_list">Check ingredients list</string>
 
     <string name="nav_button_previous" translatable="false">\u25c0</string>
