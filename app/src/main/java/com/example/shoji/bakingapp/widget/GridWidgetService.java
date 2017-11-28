@@ -105,7 +105,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         recipe.setIngredientList(RecipeProviderUtils.getIngredientsFromDb(mContext, _id));
         recipe.setStepList(RecipeProviderUtils.getStepsFromDb(mContext, _id));
 
-        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.baker_app_widget);
+        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_recipe_list);
 
         // Put recipe as extra
         Bundle extras = new Bundle();
