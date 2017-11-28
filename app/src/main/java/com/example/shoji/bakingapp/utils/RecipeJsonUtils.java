@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.pojo.RecipeIngredient;
 import com.example.shoji.bakingapp.pojo.RecipeStep;
+import com.example.shoji.bakingapp.widget.BakerAppWidgetService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,6 +84,8 @@ public class RecipeJsonUtils {
                     listSteps(context, steps, newRecipeUri);
                 }
 
+                // notify widget(s) about new entry
+                BakerAppWidgetService.startRefreshRecipe(context);
             }
 
 
