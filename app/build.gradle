@@ -39,4 +39,16 @@ dependencies {
     //schematic - https://github.com/SimonVT/schematic/blob/master/README.md
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
     compile 'net.simonvt.schematic:schematic:0.7.0'
+
+    //espresso
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+    compile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
+    //https://guides.codepath.com/android/UI-Testing-with-Espresso#interacting-with-a-recyclerview
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:3.0.1') {
+        // Necessary to avoid version conflicts
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
 }
