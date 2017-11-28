@@ -38,8 +38,8 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:text="@string/widget_empty_view_text"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
+            android:textColor="@color/widget_recipe_textColor"
+            android:textSize="@dimen/widget_recipe_text_size"
             android:textStyle="bold" />
     </RelativeLayout>
 

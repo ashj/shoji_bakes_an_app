@@ -24,4 +24,9 @@
     <dimen name="recipe_servings_text_size">24sp</dimen>
 
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_recipe_margin">8dp</dimen>
+    <dimen name="widget_recipe_minHeight">110dp</dimen>
+    <dimen name="widget_recipe_minWidth">220dp</dimen>
+
+    <dimen name="widget_recipe_text_size">18sp</dimen>
 </resources>
