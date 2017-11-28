@@ -12,8 +12,8 @@
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/widget_recipe_margin"
         android:background="@color/widget_recipe_background"
-        android:contentDescription="@string/app_name"
-        android:text="@string/app_name"
+        android:contentDescription="@string/widget_name_recipe_list"
+        android:text="@string/widget_name_recipe_list"
         android:textColor="@color/widget_recipe_textColor"
         android:textSize="@dimen/widget_recipe_text_size"
         android:textStyle="bold|italic" />

@@ -16,6 +16,7 @@
     <string name="media_player_notification_play">Play</string>
     <string name="media_player_notification_pause">Pause</string>
 
+    <string name="widget_name_recipe_list">Recipes ingredient list</string>
     <string name="widget_empty_view_text">Recipe book is empty</string>
 
     <string name="error_no_network_short">No Internet connectivity</string>
