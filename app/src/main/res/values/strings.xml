@@ -17,4 +17,6 @@
     <string name="media_player_notification_pause">Pause</string>
 
     <string name="error_no_network_short">No Internet connectivity</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

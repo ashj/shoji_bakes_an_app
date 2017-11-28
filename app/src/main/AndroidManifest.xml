@@ -20,20 +20,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RecipeActivity"
-            android:parentActivityName="com.example.shoji.bakingapp.ui.MainActivity">
+        <activity
+            android:name=".ui.RecipeActivity"
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.shoji.bakingapp.ui.MainActivity" />
         </activity>
-        <activity android:name=".ui.RecipeIngredientActivity"
-            android:parentActivityName="com.example.shoji.bakingapp.ui.RecipeActivity">
+        <activity
+            android:name=".ui.RecipeIngredientActivity"
+            android:parentActivityName=".ui.RecipeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.shoji.bakingapp.ui.RecipeActivity" />
         </activity>
-        <activity android:name=".ui.RecipeStepActivity"
-            android:parentActivityName="com.example.shoji.bakingapp.ui.RecipeActivity">
+        <activity
+            android:name=".ui.RecipeStepActivity"
+            android:parentActivityName=".ui.RecipeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.shoji.bakingapp.ui.RecipeActivity" />
@@ -49,17 +52,24 @@
             android:name=".provider.generated.RecipeProvider"
             android:authorities="com.example.shoji.bakingapp.provider.recipes"
             android:exported="false" />
-
         <provider
             android:name=".provider.generated.RecipeIngredientProvider"
             android:authorities="com.example.shoji.bakingapp.provider.ingredients"
             android:exported="false" />
-
         <provider
             android:name=".provider.generated.RecipeStepProvider"
             android:authorities="com.example.shoji.bakingapp.provider.steps"
             android:exported="false" />
 
+        <receiver android:name=".widget.BakerAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/baker_app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
