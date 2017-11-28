@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.ui.MainActivity;
+import com.example.shoji.bakingapp.ui.RecipeActivity;
 
 import timber.log.Timber;
 
@@ -47,17 +48,15 @@ public class BakerAppWidget extends AppWidgetProvider {
     }
 
     private static RemoteViews getGridRemoteView(Context context) {
-        Timber.d("getGridRemoteView - entry");
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_grid_view);
-        // Set the GridWidgetService intent to act as the adapter for the GridView
         Intent intent = new Intent(context, GridWidgetService.class);
-        views.setRemoteAdapter(R.id.widget_grid_view, intent);
 
-        Intent appIntent = new Intent(context, MainActivity.class);
+        Intent appIntent = new Intent(context, RecipeActivity.class);
         PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.widget_grid_view, appPendingIntent);
+
+        views.setRemoteAdapter(R.id.widget_grid_view, intent);
         views.setEmptyView(R.id.widget_grid_view, R.id.empty_view);
-        Timber.d("getGridRemoteView - return");
         return views;
     }
 

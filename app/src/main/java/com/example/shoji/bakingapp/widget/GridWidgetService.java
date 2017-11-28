@@ -16,7 +16,6 @@ package com.example.shoji.bakingapp.widget;
 * limitations under the License.
 */
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,11 +27,8 @@ import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.example.shoji.bakingapp.provider.RecipeContract;
 import com.example.shoji.bakingapp.provider.RecipeProvider;
-import com.example.shoji.bakingapp.ui.MainActivity;
 import com.example.shoji.bakingapp.ui.RecipeActivity;
 import com.example.shoji.bakingapp.utils.RecipeProviderUtils;
-
-import timber.log.Timber;
 
 
 public class GridWidgetService extends RemoteViewsService {
@@ -57,7 +53,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     }
 
-    //called on start and when notifyAppWidgetViewDataChanged is called
+
     @Override
     public void onDataSetChanged() {
         if (mCursor != null) mCursor.close();
@@ -68,7 +64,6 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
                 null,
                 null
         );
-        Timber.d("onDataSetChanged");
     }
 
     @Override
@@ -79,10 +74,8 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public int getCount() {
         if (mCursor == null) {
-            Timber.d("SHOJI Cursor is null, returning 0");
             return 0;
         }
-        Timber.d("SHOJI Cursor size: %d", mCursor.getCount());
         return mCursor.getCount();
     }
 
@@ -94,8 +87,8 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
      */
     @Override
     public RemoteViews getViewAt(int position) {
-        Timber.d("getViewAt -- entry");
         if (mCursor == null || mCursor.getCount() == 0) return null;
+
         mCursor.moveToPosition(position);
         String name = mCursor.getString(mCursor.getColumnIndex(RecipeContract.COLUMN_NAME));
         String recipe_id = mCursor.getString(mCursor.getColumnIndex(RecipeContract.COLUMN_RECIPE_ID));
@@ -113,23 +106,15 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
         RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.baker_app_widget);
 
-        // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
+        // Put recipe as extra
         Bundle extras = new Bundle();
-        //todo landscape mode
         extras.putParcelable(RecipeActivity.EXTRA_RECIPE_DATA, recipe);
+
+        // FillInIntent
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
         views.setOnClickFillInIntent(R.id.appwidget_text, fillInIntent);
         views.setTextViewText(R.id.appwidget_text, recipe.getName());
-
-        Timber.d("getViewAt");
-//        CharSequence widgetText = mContext.getString(R.string.appwidget_text);
-//        //RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.baker_app_widget);
-//        views.setTextViewText(R.id.appwidget_text, widgetText);
-//
-//        Intent intent = new Intent(mContext, MainActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
-//        views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
 
         return views;
 
