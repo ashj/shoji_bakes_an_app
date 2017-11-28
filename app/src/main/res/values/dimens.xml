@@ -28,5 +28,5 @@
     <dimen name="widget_recipe_minHeight">110dp</dimen>
     <dimen name="widget_recipe_minWidth">220dp</dimen>
 
-    <dimen name="widget_recipe_text_size">18sp</dimen>
+    <dimen name="widget_recipe_text_size">22sp</dimen>
 </resources>

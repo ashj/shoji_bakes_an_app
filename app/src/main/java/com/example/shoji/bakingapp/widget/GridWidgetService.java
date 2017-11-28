@@ -114,6 +114,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // FillInIntent
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
+        fillInIntent.setAction(RecipeActivity.ACTION_OPEN_INGREDIENT_LIST);
         views.setOnClickFillInIntent(R.id.appwidget_text, fillInIntent);
         views.setTextViewText(R.id.appwidget_text, recipe.getName());
 

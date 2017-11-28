@@ -17,6 +17,7 @@ public class RecipeActivity extends AppCompatActivity
         implements RecipeMasterListAdapter.OnClickListener,
         RecipeStepFragment.OnClickNavButtonListener {
     public static final String EXTRA_RECIPE_DATA = "extra-recipe-data";
+    public static final String ACTION_OPEN_INGREDIENT_LIST = "action-open-ingredient-list";
 
     private boolean mIsTabletMode;
     private RecipeStepFragmentManager mStepFragmentManager;
@@ -41,6 +42,12 @@ public class RecipeActivity extends AppCompatActivity
         }
 
         mRecipe = getRecipeFromIntent();
+
+        String action = getActionFromIntent();
+        if(action != null && action.length() != 0) {
+            Timber.d("Got an ACTION: %s", action);
+            onClickIngredient();
+        }
     }
 
     private boolean isTabletMode() {
@@ -58,6 +65,14 @@ public class RecipeActivity extends AppCompatActivity
             return null;
 
         return intent.getParcelableExtra(RecipeActivity.EXTRA_RECIPE_DATA);
+    }
+
+    private String getActionFromIntent() {
+        Intent intent = getIntent();
+        if(intent == null)
+            return null;
+
+        return intent.getAction();
     }
 
     @Override
