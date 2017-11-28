@@ -18,7 +18,7 @@ import timber.log.Timber;
 /**
  * Implementation of App Widget functionality.
  */
-public class BakerAppWidget extends AppWidgetProvider {
+public class WidgetRecipeList extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

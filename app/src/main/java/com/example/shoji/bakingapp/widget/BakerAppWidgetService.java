@@ -43,7 +43,7 @@ public class BakerAppWidgetService extends IntentService {
     }
     private void handleRefreshRecipe() {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BakerAppWidget.class));
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, WidgetRecipeList.class));
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_grid_view);
     }
