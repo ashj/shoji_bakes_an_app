@@ -2,6 +2,7 @@
     <string name="app_name">Baking App</string>
 
     <string name="tool_serving_title">255 servings</string>
+    <string name="tool_ingredient_title">2 CUP Ingredient</string>
     <string name="tool_recipe_title">Recipe</string>
     <string name="tool_recipe_media_player_view">(MEDIA PLAYER)</string>
     <string name="tool_recipe_long_description">Lorem ipsum</string>
