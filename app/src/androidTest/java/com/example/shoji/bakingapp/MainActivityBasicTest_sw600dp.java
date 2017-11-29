@@ -10,6 +10,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.example.shoji.bakingapp.tests.MainActivityTestUtils;
 import com.example.shoji.bakingapp.ui.MainActivity;
 
 import org.hamcrest.Description;
@@ -69,55 +70,12 @@ public class MainActivityBasicTest_sw600dp {
 
     @Test
     public void testIdlingResourceAndOneStep() {
-        String text1 = "Recipe Introduction";
-        String text2 = "9. Cut and serve.";
-        int recipePosition = 1;
-        int stepPosition = 2;
-
-
-        // Main activity, click on first
-        onView(withId(R.id.activity_main_recipes_recycler_view))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(recipePosition, click()));
-
-        onView(withId(R.id.activity_recipe_master_list))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(stepPosition, click()));
-
-        onView(withId(R.id.fragment_recipe_step_long_description))
-                .check(matches(withText(text1)));
-
-        for(int i=0; i < 9; i++)
-            onView(withId(R.id.navbutton_recipe_next_button))
-                    .perform(click());
-
-        onView(withId(R.id.fragment_recipe_step_long_description))
-                .check(matches(withText(text2)));
+        MainActivityTestUtils.testIdlingResourceAndOneStep();
     }
 
     @Test
     public void testIdlingResourceAndOneStepBackwards() {
-        String text1 = "Recipe Introduction";
-        String text2 = "9. Cut and serve.";
-        int recipePosition = 1;
-        int stepPosition = 11;
-
-
-        // Main activity, click on first
-        onView(withId(R.id.activity_main_recipes_recycler_view))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(recipePosition, click()));
-
-        onView(withId(R.id.activity_recipe_master_list))
-                .perform(scrollToPosition(stepPosition))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(stepPosition, click()));
-
-        onView(withId(R.id.fragment_recipe_step_long_description))
-                .check(matches(withText(text2)));
-
-        for(int i=0; i < 9; i++)
-            onView(withId(R.id.navbutton_recipe_previous_button))
-                    .perform(click());
-
-        onView(withId(R.id.fragment_recipe_step_long_description))
-                .check(matches(withText(text1)));
+        MainActivityTestUtils.testIdlingResourceAndOneStepBackwards();
     }
 
     @After
