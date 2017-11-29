@@ -1,8 +1,6 @@
 package com.example.shoji.bakingapp;
 
-import android.content.ClipData;
 import android.support.annotation.NonNull;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -22,21 +20,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.core.internal.deps.dagger.internal.Preconditions.checkNotNull;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityBasicTest {
+public class MainActivityBasicTest_sw600dp {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule =
             new ActivityTestRule(MainActivity.class);
@@ -67,7 +60,8 @@ public class MainActivityBasicTest {
         onView(withId(R.id.activity_recipe_master_list))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(ingredientPosition, click()));
 
-        onView(withId(R.id.activity_recipe_ingredients))
+
+        onView(withId(R.id.fragment_recipe_ingredient_list_recycler_view))
                 .perform(scrollToPosition(ingredientListPosition))
                 .check(matches(atPosition(ingredientListPosition, withText(text))));
 
