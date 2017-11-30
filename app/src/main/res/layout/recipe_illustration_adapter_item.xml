@@ -10,8 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/recipe_illustration_size"
         android:adjustViewBounds="true"
-        android:layout_marginTop="@dimen/recipe_illustration_margin"
-        android:background="@drawable/example_appwidget_preview" />
+        android:layout_marginTop="@dimen/recipe_illustration_margin" />
 
 </LinearLayout>
 

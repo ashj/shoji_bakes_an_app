@@ -25,7 +25,6 @@ public class RecipeMasterListAdapter
     private Recipe mRecipe;
 
     protected OnClickListener mOnClickHandler;
-    private boolean mHasIllustationImage;
 
     public interface OnClickListener {
         void onClickIngredient();
@@ -98,10 +97,10 @@ public class RecipeMasterListAdapter
         SimpleViewHolder textViewHolder;
         switch(viewType) {
             case ITEMVIEWTYPE_RECIPE_ILLUSTRATION_IMAGE:
-                text = "TEMPORARY ILLUSTRATION PLACEHOLDER";
                 Timber.d("onBindViewHolder, pos %d, ITEMVIEWTYPE_RECIPE_ILLUSTRATION_IMAGE", position);
+                String url = mRecipe.getImage();
                 imageViewHolder = (SimpleImageViewHolder) holder;
-                imageViewHolder.bindViewHolder(text);
+                imageViewHolder.bindViewHolder(mContext, url);
                 break;
 
             case ITEMVIEWTYPE_RECIPE_SERVINGS:
@@ -144,6 +143,10 @@ public class RecipeMasterListAdapter
     public int getItemCount() {
         int totalCount = 1; // count servings
         if(mRecipe != null) {
+            if(mRecipe.getImage().length() != 0) {
+            /* use just 1 position */
+                totalCount += 1;
+            }
             if(mRecipe.getIngredientList() != null &&
                     mRecipe.getIngredientList().size() != 0) {
             /* use just 1 position instead of list size */
@@ -183,8 +186,7 @@ public class RecipeMasterListAdapter
         int steps_endPos;
 
         // image view boundaries
-        mHasIllustationImage = true;
-        if(mHasIllustationImage) {
+        if(mRecipe.getImage().length() != 0) {
             image_startPos = 0;
             image_endPos = 1;
         }
