@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
@@ -22,20 +23,17 @@ public class WidgetIngredientList extends AppWidgetProvider {
 
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, String recipeId, String recipeName) {
+                                int appWidgetId) {
 
-        RemoteViews views = getGridRemoteView(context, recipeId, recipeName);
+        RemoteViews views = getGridRemoteView(context, appWidgetId);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        String recipeId = "2";
-        String recipeName = "Argh";
-
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, recipeId, recipeName);
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
@@ -53,21 +51,23 @@ public class WidgetIngredientList extends AppWidgetProvider {
     }
 
 
-    private static RemoteViews getGridRemoteView(Context context, String recipeId, String recipeName) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_grid_view);
-        Intent intent = new Intent(context, IngredientGridWidgetService.class);
+    private static RemoteViews getGridRemoteView(Context context, int appWidgetId) {
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+                R.layout.widget_stack_view);
 
-        intent.putExtra(WidgetIngredientList.EXTRA_RECIPE_ID, recipeId);
+        // set intent for widget service that will create the views
+        Intent serviceIntent = new Intent(context, StackWidgetService.class);
+        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
-        intent.putExtra(WidgetIngredientList.EXTRA_RECIPE_NAME, recipeName);
+        remoteViews.setRemoteAdapter(R.id.stackWidgetView, serviceIntent);
+        remoteViews.setEmptyView(R.id.stackWidgetView, R.id.stackWidgetEmptyView);
 
-        //Intent appIntent = new Intent(context, RecipeActivity.class);
-        //PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //views.setPendingIntentTemplate(R.id.widget_grid_view, appPendingIntent);
+        // set intent for item click (opens main activity)
+        Intent appIntent = new Intent(context, RecipeActivity.class);
+        PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setPendingIntentTemplate(R.id.stackWidgetView, appPendingIntent);
 
-        views.setRemoteAdapter(R.id.widget_grid_view, intent);
-        views.setEmptyView(R.id.widget_grid_view, R.id.empty_view);
-        return views;
+        return remoteViews;
     }
 
 }

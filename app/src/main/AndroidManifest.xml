@@ -76,16 +76,10 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <service
-            android:name=".widget.IngredientGridWidgetService"
+            android:name=".widget.StackWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <service android:name=".widget.BakerAppWidgetService" />
-
-        <activity android:name=".widget.WidgetIngredientListConfigurationActivity">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
 
         <receiver android:name=".widget.WidgetIngredientList">
             <intent-filter>
