@@ -4,6 +4,7 @@ package com.example.shoji.bakingapp.widget;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -59,8 +60,7 @@ public class BakerAppWidgetService extends IntentService {
 
     private void handleRefreshWidget(Intent intent) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        int appWidgetId = intent.getIntExtra(
-                AppWidgetManager.EXTRA_APPWIDGET_ID,
+        int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
         String recipeId = intent.getStringExtra(
                 WidgetIngredientList.EXTRA_RECIPE_ID);
@@ -68,10 +68,14 @@ public class BakerAppWidgetService extends IntentService {
         String recipeName = intent.getStringExtra(
                 WidgetIngredientList.EXTRA_RECIPE_NAME);
 
-        RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_grid_view);
+        //RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_grid_view);
 
 //        WidgetIngredientList.setIntent(intent);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_grid_view);
+        WidgetIngredientList.updateAppWidget(this,
+                appWidgetManager,
+                appWidgetId,
+                recipeId, recipeName);
 
 
         Timber.d("handleRefreshWidget. got AppWidgetId:%d with recipeId: %s - %s", appWidgetId, recipeId, recipeName);

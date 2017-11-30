@@ -48,11 +48,6 @@ public class WidgetIngredientListConfigurationActivity        extends AppCompatA
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(savedInstanceState == null) {
-            if(BuildConfig.DEBUG)
-                Timber.plant(new Timber.DebugTree());
-            Timber.d("Logging With Timber");
-        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_widget_ingredient_list_configuration);

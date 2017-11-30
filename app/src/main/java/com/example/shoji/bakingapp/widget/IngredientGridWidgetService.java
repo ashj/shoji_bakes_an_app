@@ -45,8 +45,8 @@ public class IngredientGridWidgetService extends RemoteViewsService {
 }
 
 class IngredientGridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private String mRecipeId = "1";
-    private String mRecipeName = "Recipe name";
+    private String mRecipeId;
+    private String mRecipeName;
     private Context mContext;
 
     private Cursor mCursor;
@@ -55,11 +55,11 @@ class IngredientGridRemoteViewsFactory implements RemoteViewsService.RemoteViews
                                             Intent intent) {
         mContext = applicationContext;
 
-//        mRecipeId = intent.getStringExtra(
-//                WidgetIngredientList.EXTRA_RECIPE_ID);
-//
-//        mRecipeName = intent.getStringExtra(
-//                WidgetIngredientList.EXTRA_RECIPE_NAME);
+        mRecipeId = intent.getStringExtra(
+                WidgetIngredientList.EXTRA_RECIPE_ID);
+
+        mRecipeName = intent.getStringExtra(
+                WidgetIngredientList.EXTRA_RECIPE_NAME);
 
         Timber.d("IngredientGridRemoteViewsFactory with recipeId: %s - %s", mRecipeId, mRecipeName);
     }
