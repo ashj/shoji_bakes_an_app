@@ -194,7 +194,7 @@ public class BakerPlayer
         PlaybackStateCompat state = mStateBuilder.build();
         sMediaSession.setPlaybackState(state);
 
-        showNotification(mContext, mNotificationManager, sMediaSession, state);
+        //showNotification(mContext, mNotificationManager, sMediaSession, state);
 
     }
 

@@ -45,7 +45,8 @@ public class RecipeStepFragment extends Fragment
     private OnClickNavButtonListener mOnClickHandler;
 
     private ScrollView mLongDescriptionScrollView;
-    Bundle mSavedInstanceState;
+    private Bundle mSavedInstanceState;
+    private View mRootView;
 
 
     public RecipeStepFragment() {
@@ -66,7 +67,7 @@ public class RecipeStepFragment extends Fragment
         boolean attachToRoot = false;
         mSavedInstanceState = savedInstanceState;
 
-        View rootView = inflater.inflate(
+        mRootView = inflater.inflate(
                 R.layout.fragment_recipe_step_list,
                 container,
                 attachToRoot);
@@ -75,25 +76,29 @@ public class RecipeStepFragment extends Fragment
         mStepPosition = getStepNumberFromBundle(getArguments());
         Timber.d("Got currentPosition -- %d", mStepPosition);
 
-
-        createGeneralViews(rootView, savedInstanceState);
-
-        createMediaPlayerView(rootView, savedInstanceState);
-
+        createGeneralViews();
 
         FragmentActivity activity = getActivity();
         if (activity != null)
             activity.setTitle(mRecipe.getName());
 
-        return rootView;
+        Timber.d("onCreateView");
+
+        return mRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        createMediaPlayerView();
     }
 
 
-    private void createMediaPlayerView(View rootView, Bundle state) {
+    private void createMediaPlayerView() {
         Context context = getContext();
 
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Activity.NOTIFICATION_SERVICE);
-        mExoPlayerView = rootView.findViewById(R.id.fragment_recipe_step_media_player);
+        mExoPlayerView = mRootView.findViewById(R.id.fragment_recipe_step_media_player);
 
         mBakerPlayer = new BakerPlayer(context, mExoPlayerView, notificationManager);
         mBakerPlayer.setNotificationTitle(mRecipe.getName());
@@ -104,29 +109,29 @@ public class RecipeStepFragment extends Fragment
         if(urlString != null) {
             Uri videoUri = Uri.parse(urlString);
             mBakerPlayer.initializePlayer(videoUri);
-            restoreInstanceState(state);
+            restoreInstanceState(mSavedInstanceState);
         }
 
     }
 
-    private void createGeneralViews(View rootView, final Bundle state) {
+    private void createGeneralViews() {
         Timber.d("createViews");
 
         /* fragment_recipe_step_long_description is not defined in phone landscape layout */
-        mLongDescription = rootView.findViewById(R.id.fragment_recipe_step_long_description);
+        mLongDescription = mRootView.findViewById(R.id.fragment_recipe_step_long_description);
         mIsPhoneLandscape = mLongDescription == null;
 
 
         if(!mIsPhoneLandscape) {
-            mLongDescriptionScrollView = rootView.findViewById(R.id.fragment_recipe_step_long_description_scrollview);
+            mLongDescriptionScrollView = mRootView.findViewById(R.id.fragment_recipe_step_long_description_scrollview);
             mLongDescription.setText(mRecipe.getStepList().get(mStepPosition).getLongDescription());
 
-            createNavButtonView(rootView);
+            createNavButtonView(mRootView);
 
             mLongDescriptionScrollView.post(new Runnable() {
                 @Override
                 public void run() {
-                    restoreScrollPosition(state);
+                    restoreScrollPosition(mSavedInstanceState);
                 }
             });
 
@@ -216,14 +221,14 @@ public class RecipeStepFragment extends Fragment
     }
 
 
-
-
-
-
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
         if(mBakerPlayer != null) {
+            if(mSavedInstanceState == null)
+                mSavedInstanceState = new Bundle();
+
+            onSaveInstanceState(mSavedInstanceState);
             mBakerPlayer.releasePlayer();
             mBakerPlayer.mediaSessionSetActive(false);
         }
