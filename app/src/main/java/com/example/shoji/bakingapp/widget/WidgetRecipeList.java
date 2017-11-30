@@ -49,7 +49,7 @@ public class WidgetRecipeList extends AppWidgetProvider {
 
     private static RemoteViews getGridRemoteView(Context context) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_grid_view);
-        Intent intent = new Intent(context, GridWidgetService.class);
+        Intent intent = new Intent(context, RecipeGridWidgetService.class);
 
         Intent appIntent = new Intent(context, RecipeActivity.class);
         PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);

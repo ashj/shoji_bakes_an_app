@@ -31,19 +31,19 @@ import com.example.shoji.bakingapp.ui.RecipeActivity;
 import com.example.shoji.bakingapp.utils.RecipeProviderUtils;
 
 
-public class GridWidgetService extends RemoteViewsService {
+public class RecipeGridWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new GridRemoteViewsFactory(this.getApplicationContext());
+        return new RecipeGridRemoteViewsFactory(this.getApplicationContext());
     }
 }
 
-class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+class RecipeGridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     Context mContext;
     Cursor mCursor;
 
-    public GridRemoteViewsFactory(Context applicationContext) {
+    public RecipeGridRemoteViewsFactory(Context applicationContext) {
         mContext = applicationContext;
 
     }

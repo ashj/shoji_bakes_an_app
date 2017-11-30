@@ -72,8 +72,13 @@
         </receiver>
 
         <service
-            android:name=".widget.GridWidgetService"
+            android:name=".widget.RecipeGridWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <service
+            android:name=".widget.IngredientGridWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <service android:name=".widget.BakerAppWidgetService" />
 
         <activity android:name=".widget.WidgetIngredientListConfigurationActivity">
