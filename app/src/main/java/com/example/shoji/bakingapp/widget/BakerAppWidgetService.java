@@ -63,9 +63,15 @@ public class BakerAppWidgetService extends IntentService {
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
         String recipeId = intent.getStringExtra(
-                WidgetIngredientList.EXTRA_RECIPE);
+                WidgetIngredientList.EXTRA_RECIPE_ID);
+
+        String recipeName = intent.getStringExtra(
+                WidgetIngredientList.EXTRA_RECIPE_NAME);
+
         RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_grid_view);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-        Timber.d("handleRefreshWidget. got AppWidgetId:%d with recipeId: %s", appWidgetId, recipeId);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_grid_view);
+
+        //WidgetIngredientList.updateAppWidget(appWidgetId, views);
+        Timber.d("handleRefreshWidget. got AppWidgetId:%d with recipeId: %s - %s", appWidgetId, recipeId, recipeName);
     }
 }

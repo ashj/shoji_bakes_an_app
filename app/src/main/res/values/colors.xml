@@ -28,4 +28,7 @@
 
     <color name="widget_recipe_textColor">@android:color/white</color>
     <color name="widget_recipe_background">#09C</color>
+
+    <color name="widget_ingredient_textColor">@android:color/white</color>
+    <color name="widget_ingredient_background">@color/colorPrimaryDark</color>
 </resources>

@@ -7,6 +7,7 @@
     <string name="tool_recipe_media_player_view">(MEDIA PLAYER)</string>
     <string name="tool_recipe_long_description">Lorem ipsum</string>
 
+    <string name="recipe_formatted_ingredients"><xliff:g>%1$s</xliff:g> <xliff:g>%2$s</xliff:g> <xliff:g>%3$s</xliff:g></string>
     <string name="recipe_servings"><xliff:g>%1$s</xliff:g> servings</string>
     <string name="ingredients_list">Check ingredients list</string>
 
@@ -17,6 +18,7 @@
     <string name="media_player_notification_pause">Pause</string>
 
     <string name="widget_name_recipe_list">Recipes ingredient list</string>
+    <string name="widget_name_ingredient_list">Ingredients list</string>
     <string name="widget_empty_view_text">Recipe book is empty</string>
 
     <string name="error_no_network_short">No Internet connectivity</string>

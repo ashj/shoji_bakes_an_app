@@ -155,14 +155,15 @@ public class WidgetIngredientListConfigurationActivity        extends AppCompatA
 
         Intent intentRefresh = new Intent(this, BakerAppWidgetService.class);
         intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-        intentRefresh.putExtra(WidgetIngredientList.EXTRA_RECIPE, recipe.getId());
-
+        intentRefresh.putExtra(WidgetIngredientList.EXTRA_RECIPE_ID, recipe.getId());
+        intentRefresh.putExtra(WidgetIngredientList.EXTRA_RECIPE_NAME, recipe.getName());
         BakerAppWidgetService.startRefreshWidget(this, intentRefresh);
 
 
         Intent intent = new Intent();
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-        intent.putExtra(WidgetIngredientList.EXTRA_RECIPE, recipe.getId());
+        intent.putExtra(WidgetIngredientList.EXTRA_RECIPE_ID, recipe.getId());
+        intentRefresh.putExtra(WidgetIngredientList.EXTRA_RECIPE_NAME, recipe.getName());
 
         setResult(RESULT_OK, intent);
         finish();
