@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.widget.RemoteViews;
 
 import com.example.shoji.bakingapp.R;
 
@@ -14,6 +15,7 @@ import timber.log.Timber;
 
 public class BakerAppWidgetService extends IntentService {
     public static final String ACTION_REFRESH_RECIPE_LIST = "com.example.shoji.bakingapp.action.refresh_recipe";
+    public static final String ACTION_REFRESH_WIDGET = "com.example.shoji.bakingapp.action.refresh_widget";
     public static final String EXTRA_RECIPE_ID = "com.example.shoji.bakingapp.extra.recipe_id";
 
     public BakerAppWidgetService() {
@@ -27,9 +29,10 @@ public class BakerAppWidgetService extends IntentService {
             return;
         String action = intent.getAction();
         Timber.d("Got ACTION: %s", action);
-        if(TextUtils.equals(action, ACTION_REFRESH_RECIPE_LIST)) {
-            Timber.d("Got handle ACTION: %s", ACTION_REFRESH_RECIPE_LIST);
+        if (TextUtils.equals(action, ACTION_REFRESH_RECIPE_LIST)) {
             handleRefreshRecipe();
+        } else if (TextUtils.equals(action, ACTION_REFRESH_WIDGET)) {
+            handleRefreshWidget(intent);
         }
     }
 
@@ -39,12 +42,30 @@ public class BakerAppWidgetService extends IntentService {
         Intent intent = new Intent(context, BakerAppWidgetService.class);
         intent.setAction(ACTION_REFRESH_RECIPE_LIST);
         context.startService(intent);
-
     }
+
     private void handleRefreshRecipe() {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, WidgetRecipeList.class));
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_grid_view);
+    }
+
+    public static void startRefreshWidget(Context context, Intent intent) {
+        Timber.d("Started Action: %s", ACTION_REFRESH_RECIPE_LIST);
+        intent.setAction(ACTION_REFRESH_WIDGET);
+        context.startService(intent);
+    }
+
+    private void handleRefreshWidget(Intent intent) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int appWidgetId = intent.getIntExtra(
+                AppWidgetManager.EXTRA_APPWIDGET_ID,
+                AppWidgetManager.INVALID_APPWIDGET_ID);
+        String recipeId = intent.getStringExtra(
+                WidgetIngredientList.EXTRA_RECIPE);
+        RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_grid_view);
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+        Timber.d("handleRefreshWidget. got AppWidgetId:%d with recipeId: %s", appWidgetId, recipeId);
     }
 }

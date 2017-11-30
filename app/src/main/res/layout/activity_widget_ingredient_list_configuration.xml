@@ -6,4 +6,26 @@
     android:layout_height="match_parent"
     tools:context="com.example.shoji.bakingapp.widget.WidgetIngredientListConfigurationActivity">
 
+    <ProgressBar
+        android:id="@+id/activity_widget_ingredient_list_configuration_progressbar"
+        android:layout_width="@dimen/activity_main_progressbar_size"
+        android:layout_height="@dimen/activity_main_progressbar_size"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+        android:id="@+id/activity_widget_ingredient_list_configuration_recipes_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

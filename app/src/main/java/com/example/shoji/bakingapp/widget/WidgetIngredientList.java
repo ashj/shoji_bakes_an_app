@@ -11,7 +11,7 @@ import com.example.shoji.bakingapp.R;
  * Implementation of App Widget functionality.
  */
 public class WidgetIngredientList extends AppWidgetProvider {
-
+    public static final String EXTRA_RECIPE = "extra_recipe";
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
