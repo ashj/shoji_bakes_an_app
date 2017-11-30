@@ -16,6 +16,9 @@ import com.example.shoji.bakingapp.ui.RecipeActivity;
 public class WidgetIngredientList extends AppWidgetProvider {
     public static final String EXTRA_RECIPE_NAME = "extra_recipe_name";
     public static final String EXTRA_RECIPE_ID = "extra_recipe_id";
+
+    private static Intent sIntent;
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -44,15 +47,20 @@ public class WidgetIngredientList extends AppWidgetProvider {
 
     private static RemoteViews getGridRemoteView(Context context) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_grid_view);
-        Intent intent = new Intent(context, IngredientGridWidgetService.class);
+        if(sIntent == null)
+            sIntent = new Intent(context, IngredientGridWidgetService.class);
 
         //Intent appIntent = new Intent(context, RecipeActivity.class);
         //PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         //views.setPendingIntentTemplate(R.id.widget_grid_view, appPendingIntent);
 
-        views.setRemoteAdapter(R.id.widget_grid_view, intent);
+        views.setRemoteAdapter(R.id.widget_grid_view, sIntent);
         views.setEmptyView(R.id.widget_grid_view, R.id.empty_view);
         return views;
     }
+
+//    public static void setIntent(final Intent intent) {
+//        sIntent = intent;
+//    }
 }
 

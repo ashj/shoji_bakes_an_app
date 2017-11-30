@@ -16,6 +16,7 @@ package com.example.shoji.bakingapp.widget;
 * limitations under the License.
 */
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -33,11 +34,13 @@ import com.example.shoji.bakingapp.provider.RecipeProvider;
 import com.example.shoji.bakingapp.ui.RecipeActivity;
 import com.example.shoji.bakingapp.utils.RecipeProviderUtils;
 
+import timber.log.Timber;
+
 
 public class IngredientGridWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new IngredientGridRemoteViewsFactory(this.getApplicationContext());
+        return new IngredientGridRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 }
 
@@ -45,11 +48,20 @@ class IngredientGridRemoteViewsFactory implements RemoteViewsService.RemoteViews
     private String mRecipeId = "1";
     private String mRecipeName = "Recipe name";
     private Context mContext;
+
     private Cursor mCursor;
 
-    public IngredientGridRemoteViewsFactory(Context applicationContext) {
+    public IngredientGridRemoteViewsFactory(Context applicationContext,
+                                            Intent intent) {
         mContext = applicationContext;
 
+//        mRecipeId = intent.getStringExtra(
+//                WidgetIngredientList.EXTRA_RECIPE_ID);
+//
+//        mRecipeName = intent.getStringExtra(
+//                WidgetIngredientList.EXTRA_RECIPE_NAME);
+
+        Timber.d("IngredientGridRemoteViewsFactory with recipeId: %s - %s", mRecipeId, mRecipeName);
     }
 
     @Override
