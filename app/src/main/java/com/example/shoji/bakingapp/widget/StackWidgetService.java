@@ -10,10 +10,13 @@ import android.widget.RemoteViewsService;
 
 import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.pojo.Recipe;
+import com.example.shoji.bakingapp.pojo.RecipeIngredient;
 import com.example.shoji.bakingapp.provider.RecipeContract;
 import com.example.shoji.bakingapp.provider.RecipeProvider;
 import com.example.shoji.bakingapp.ui.RecipeActivity;
 import com.example.shoji.bakingapp.utils.RecipeProviderUtils;
+
+import java.util.ArrayList;
 
 public class StackWidgetService extends RemoteViewsService {
     @Override
@@ -25,14 +28,10 @@ public class StackWidgetService extends RemoteViewsService {
 class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private Context mContext;
-    Cursor mCursor;
-
-    private int mAppWidgetId;
+    private Cursor mCursor;
 
     public StackRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
-        mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
     @Override
@@ -72,8 +71,9 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         recipe.setIngredientList(RecipeProviderUtils.getIngredientsFromDb(mContext, _id));
         recipe.setStepList(RecipeProviderUtils.getStepsFromDb(mContext, _id));
 
+        int layoutResId = R.layout.widget_ingredient_list;
 
-        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_ingredient_list);
+        RemoteViews views = new RemoteViews(mContext.getPackageName(), layoutResId);
 
         // Put recipe as extra
         Bundle extras = new Bundle();
@@ -82,9 +82,22 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // FillInIntent
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
-        fillInIntent.setAction(RecipeActivity.ACTION_OPEN_INGREDIENT_LIST);
+        //fillInIntent.setAction(RecipeActivity.ACTION_OPEN_INGREDIENT_LIST);
         views.setOnClickFillInIntent(R.id.appwidget_text, fillInIntent);
-        views.setTextViewText(R.id.appwidget_text, recipe.getName());
+
+        StringBuffer sb = new StringBuffer();
+        sb.append(recipe.getName());
+        ArrayList<RecipeIngredient> ingredients = recipe.getIngredientList();
+        if(ingredients != null) {
+            for (RecipeIngredient ingredient : ingredients) {
+                String formatted = mContext.getString(R.string.recipe_formatted_ingredients,
+                        ingredient.getQuantity(),
+                        ingredient.getMeasure(),
+                        ingredient.getDescription());
+                sb.append("\n").append(formatted);
+            }
+        }
+        views.setTextViewText(R.id.appwidget_text, sb.toString());
 
         return views;
     }

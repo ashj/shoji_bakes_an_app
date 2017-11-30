@@ -57,7 +57,6 @@ public class WidgetIngredientList extends AppWidgetProvider {
 
         // set intent for widget service that will create the views
         Intent serviceIntent = new Intent(context, StackWidgetService.class);
-        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
         remoteViews.setRemoteAdapter(R.id.stackWidgetView, serviceIntent);
         remoteViews.setEmptyView(R.id.stackWidgetView, R.id.stackWidgetEmptyView);
