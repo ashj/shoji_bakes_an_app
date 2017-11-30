@@ -12,19 +12,20 @@ import com.example.shoji.bakingapp.pojo.Recipe;
 import timber.log.Timber;
 
 public class RecipeMasterListAdapter
-        extends RecyclerView.Adapter<SimpleViewHolder>
+        extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements SimpleViewHolder.OnClickListener
 {
     private static final int ITEMVIEWTYPE_RECIPE_INGREDIENT = 0;
     private static final int ITEMVIEWTYPE_RECIPE_STEP = 1;
     private static final int ITEMVIEWTYPE_RECIPE_SERVINGS = 2;
+    private static final int ITEMVIEWTYPE_RECIPE_ILLUSTRATION_IMAGE = 3;
     private static final int ITEMVIEWTYPE_UNKNOWN = -1;
 
     private Context mContext;
     private Recipe mRecipe;
 
     protected OnClickListener mOnClickHandler;
-
+    private boolean mHasIllustationImage;
 
     public interface OnClickListener {
         void onClickIngredient();
@@ -40,53 +41,88 @@ public class RecipeMasterListAdapter
 
 
     @Override
-    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Timber.d("onCreateViewHolder");
-        boolean attachToRoot = false;
-        final int INVALID = -1;
-        int layoutResId = INVALID;
+        int layoutResId;
+        RecyclerView.ViewHolder viewHolder = null;
+
+        int textViewResId = R.id.recipe_adapter_title_tv;
         switch (viewType) {
+            case ITEMVIEWTYPE_RECIPE_ILLUSTRATION_IMAGE:
+                viewHolder = createImageHolder(parent);
+                break;
             case ITEMVIEWTYPE_RECIPE_SERVINGS:
                 layoutResId = R.layout.recipe_serving_adapter_item;
+                viewHolder = createSimpleViewHolder(parent, layoutResId, textViewResId);
                 break;
             case ITEMVIEWTYPE_RECIPE_INGREDIENT:
             case ITEMVIEWTYPE_RECIPE_STEP:
                 layoutResId = R.layout.recipe_details_adapter_item;
+                viewHolder = createSimpleViewHolder(parent, layoutResId, textViewResId);
                 break;
                 default:
                     break;
         }
-        SimpleViewHolder viewHolder = null;
-        if(layoutResId != INVALID) {
-            View itemView = LayoutInflater
-                    .from(parent.getContext())
-                    .inflate(layoutResId, parent, attachToRoot);
-            SimpleViewHolder.OnClickListener onClickHandler = this;
-            viewHolder = new SimpleViewHolder(itemView, R.id.recipe_adapter_title_tv, onClickHandler);
-        }
+
+        return viewHolder;
+    }
+
+    private SimpleImageViewHolder createImageHolder(ViewGroup parent) {
+        boolean attachToRoot = false;
+        int layoutResId = R.layout.recipe_illustration_adapter_item;
+        int imageViewResId = R.id.recipe_adapter_illustration_image;
+
+        View itemView = LayoutInflater
+                .from(parent.getContext())
+                .inflate(layoutResId, parent, attachToRoot);
+
+        SimpleImageViewHolder viewHolder = new SimpleImageViewHolder(itemView, imageViewResId);
+        return viewHolder;
+    }
+
+    private SimpleViewHolder createSimpleViewHolder(ViewGroup parent, int layoutResId, int testViewResId) {
+        boolean attachToRoot = false;
+        View itemView = LayoutInflater
+                .from(parent.getContext())
+                .inflate(layoutResId, parent, attachToRoot);
+        SimpleViewHolder.OnClickListener onClickHandler = this;
+        SimpleViewHolder viewHolder = new SimpleViewHolder(itemView, testViewResId, onClickHandler);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(SimpleViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
+        String text;
+        SimpleImageViewHolder imageViewHolder;
+        SimpleViewHolder textViewHolder;
         switch(viewType) {
+            case ITEMVIEWTYPE_RECIPE_ILLUSTRATION_IMAGE:
+                text = "TEMPORARY ILLUSTRATION PLACEHOLDER";
+                Timber.d("onBindViewHolder, pos %d, ITEMVIEWTYPE_RECIPE_ILLUSTRATION_IMAGE", position);
+                imageViewHolder = (SimpleImageViewHolder) holder;
+                imageViewHolder.bindViewHolder(text);
+                break;
+
             case ITEMVIEWTYPE_RECIPE_SERVINGS:
-                String text = mContext.getString(R.string.recipe_servings,mRecipe.getServings());
+                text = mContext.getString(R.string.recipe_servings,mRecipe.getServings());
                 Timber.d("onBindViewHolder, pos %d, ITEMVIEWTYPE_RECIPE_SERVINGS", position);
-                holder.bindViewHolder(text);
+                textViewHolder = (SimpleViewHolder) holder;
+                textViewHolder.bindViewHolder(text);
                 break;
 
             case ITEMVIEWTYPE_RECIPE_INGREDIENT:
                 Timber.d("onBindViewHolder, pos %d, ITEMVIEWTYPE_RECIPE_INGREDIENT", position);
-                holder.bindViewHolder(mContext.getString(R.string.ingredients_list));
+                textViewHolder = (SimpleViewHolder) holder;
+                textViewHolder.bindViewHolder(mContext.getString(R.string.ingredients_list));
                 break;
             case ITEMVIEWTYPE_RECIPE_STEP:
                 int positionOffset = getPositionOffset(position);
                 Timber.d("onBindViewHolder, pos %d/ offset: %d, ITEMVIEWTYPE_RECIPE_STEP",
                         position, positionOffset);
 
-                holder.bindViewHolder(mRecipe.getStepList().get(positionOffset).getShortDescription());
+                textViewHolder = (SimpleViewHolder) holder;
+                textViewHolder.bindViewHolder(mRecipe.getStepList().get(positionOffset).getShortDescription());
                 Timber.d(mRecipe.getStepList().get(positionOffset).getShortDescription());
                 break;
             default:
@@ -133,21 +169,43 @@ public class RecipeMasterListAdapter
     @Override
     public int getItemViewType(int position) {
         int viewType = ITEMVIEWTYPE_UNKNOWN;
-        int serving_startPos = 0;
-        int serving_endPos = serving_startPos + 1;
 
-        int ingredients_startPos = serving_endPos;
+        int image_startPos;
+        int image_endPos;
+
+        int serving_startPos;
+        int serving_endPos;
+
+        int ingredients_startPos;
         int ingredients_endPos;
 
         int steps_startPos;
         int steps_endPos;
 
+        // image view boundaries
+        mHasIllustationImage = true;
+        if(mHasIllustationImage) {
+            image_startPos = 0;
+            image_endPos = 1;
+        }
+        else {
+            image_startPos = -1;
+            image_endPos = 0;
+        }
+
+        // serving view boundaries
+        serving_startPos = image_endPos;
+        serving_endPos = serving_startPos + 1;
+
+        // ingredients view boundaries
+        ingredients_startPos = serving_endPos;
         ingredients_endPos = ingredients_startPos;
         if(mRecipe.getIngredientList() != null &&
                 mRecipe.getIngredientList().size() != 0) {
             /* use just 1 position instead of list size */
             ingredients_endPos += 1;
         }
+        // steps view boundaries
         steps_startPos = ingredients_endPos;
         steps_endPos = steps_startPos;
         if(mRecipe.getStepList() != null) {
@@ -155,11 +213,16 @@ public class RecipeMasterListAdapter
         }
 
         Timber.d("getItemViewType - POSITION: %d", position);
+        Timber.d("getItemViewType - image  : [%d, %d[", image_startPos, image_endPos);
         Timber.d("getItemViewType - serving: [%d, %d[", serving_startPos, serving_endPos);
-        Timber.d("getItemViewType - ingred : [%d, %d[", ingredients_startPos, ingredients_endPos);
+        Timber.d("getItemViewType - ingred.: [%d, %d[", ingredients_startPos, ingredients_endPos);
         Timber.d("getItemViewType - step   : [%d, %d[", steps_startPos, steps_endPos);
 
-        if(position == 0) {
+        if((image_startPos <= position) && (position < image_endPos)) {
+            Timber.d("getItemViewType pos: %d - ITEMVIEWTYPE_RECIPE_ILLUSTRATION_IMAGE", position);
+            viewType = ITEMVIEWTYPE_RECIPE_ILLUSTRATION_IMAGE;
+        }
+        else if((serving_startPos <= position) && (position < serving_endPos)) {
             Timber.d("getItemViewType pos: %d - ITEMVIEWTYPE_RECIPE_SERVINGS", position);
             viewType = ITEMVIEWTYPE_RECIPE_SERVINGS;
         }

@@ -9,6 +9,9 @@
     <dimen name="navbutton_recipe_step_button_height">40dp</dimen>
     <dimen name="navbutton_recipe_step_button_text_size">48dp</dimen>
 
+    <dimen name="recipe_illustration_size">200dp</dimen>
+    <dimen name="recipe_illustration_margin">4dp</dimen>
+
     <dimen name="recipe_ingredient_text_size">18sp</dimen>
     <dimen name="recipe_ingredient_margin">12dp</dimen>
 
