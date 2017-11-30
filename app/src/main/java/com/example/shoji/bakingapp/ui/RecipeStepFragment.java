@@ -25,8 +25,9 @@ import timber.log.Timber;
 
 public class RecipeStepFragment extends Fragment
     implements View.OnClickListener {
-    private static final String SAVE_INSTANCE_STATE_PLAYER_POSITION = "player_position";
+    private static final String SAVE_INSTANCE_STATE_PLAYER_STATE = "player_state";
     private static final String SAVE_INSTANCE_STATE_DESCRIPTION_POSITION = "description_position";
+
 
     private static final int POSITION_INVALID = -1;
 
@@ -109,7 +110,7 @@ public class RecipeStepFragment extends Fragment
         if(urlString != null) {
             Uri videoUri = Uri.parse(urlString);
             mBakerPlayer.initializePlayer(videoUri);
-            restoreInstanceState(mSavedInstanceState);
+            restoreMediaPlayerInstanceState(mSavedInstanceState);
         }
 
     }
@@ -238,8 +239,10 @@ public class RecipeStepFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(mBakerPlayer != null)
-            outState.putLong(SAVE_INSTANCE_STATE_PLAYER_POSITION, mBakerPlayer.onSaveInstanceState());
+        if(mBakerPlayer != null) {
+            outState.putBundle(SAVE_INSTANCE_STATE_PLAYER_STATE, mBakerPlayer.onSaveInstanceState());
+
+        }
         if(mLongDescriptionScrollView != null) {
             int[] position = new int[]{
                     mLongDescriptionScrollView.getScrollX(),
@@ -254,15 +257,12 @@ public class RecipeStepFragment extends Fragment
         }
     }
 
-    private void restoreInstanceState(Bundle state) {
-        if(state != null) {
-            long position = state.getLong(SAVE_INSTANCE_STATE_PLAYER_POSITION, 0);
-            Timber.d("restoreInstanceState - position: %d", position);
-            if(position != BakerPlayer.INVALID_POSITION)
-            mBakerPlayer.onRestoreInstanceState(position);
+    private void restoreMediaPlayerInstanceState(Bundle state) {
+        if(state != null && state.containsKey(SAVE_INSTANCE_STATE_PLAYER_STATE)) {
+            Bundle playerState = state.getBundle(SAVE_INSTANCE_STATE_PLAYER_STATE);
+            mBakerPlayer.onRestoreInstanceState(playerState);
         }
     }
-
 
 
     private void restoreScrollPosition(Bundle state) {

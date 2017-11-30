@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -45,7 +46,9 @@ public class BakerPlayer
     private static final String BAKERPLAYER_CHANNEL_MEDIA_CONTROL_ID = "bakerplayer-media-control-id";
     private static final String BAKERPLAYER_CHANNEL_MEDIA_CONTROL_NAME = "bakerplayer-media-control-name";
     //[END] Android O - notification channel
-    public static final long INVALID_POSITION = -1;
+    public static final String SAVE_INSTANCE_STATE_PLAYER_POSITION = "player_position";
+    public static final String SAVE_INSTANCE_STATE_PLAY_PAUSE = "state_play_pause";
+
 
     private Context mContext;
 
@@ -303,15 +306,27 @@ public class BakerPlayer
         notificationManager.notify(0, builder.build());
     }
 
-    public long onSaveInstanceState() {
-        if(mExoPlayer != null)
-            return mExoPlayer.getCurrentPosition();
-        return INVALID_POSITION;
+    public Bundle onSaveInstanceState() {
+        Bundle outState = new Bundle();
+        if(mExoPlayer != null) {
+            outState.putLong(SAVE_INSTANCE_STATE_PLAYER_POSITION,
+                    mExoPlayer.getCurrentPosition());
+            outState.putBoolean(SAVE_INSTANCE_STATE_PLAY_PAUSE,
+                    mExoPlayer.getPlayWhenReady());
+        }
+        return outState;
     }
-    public void onRestoreInstanceState(long position) {
 
-        mExoPlayer.seekTo(position);
+    public void onRestoreInstanceState(Bundle savedState) {
+        if(savedState != null) {
+            if(savedState.containsKey(SAVE_INSTANCE_STATE_PLAYER_POSITION)) {
+                mExoPlayer.seekTo(savedState.getLong(SAVE_INSTANCE_STATE_PLAYER_POSITION));
+            }
+            if(savedState.containsKey(SAVE_INSTANCE_STATE_PLAY_PAUSE)) {
+                mExoPlayer.setPlayWhenReady(savedState.getBoolean(SAVE_INSTANCE_STATE_PLAY_PAUSE));
+            }
 
+        }
     }
 
 }
