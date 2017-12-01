@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.example.shoji.bakingapp.R;
 import com.example.shoji.bakingapp.media.BakerPlayer;
 import com.example.shoji.bakingapp.pojo.Recipe;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.squareup.picasso.Picasso;
 
 import timber.log.Timber;
 
@@ -38,6 +40,8 @@ public class RecipeStepFragment extends Fragment
 
     private SimpleExoPlayerView mExoPlayerView;
     private BakerPlayer mBakerPlayer;
+
+    private ImageView mStepIllustration;
 
     private TextView mLongDescription;
     private TextView mPreviousStepButton;
@@ -91,20 +95,51 @@ public class RecipeStepFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        createMediaPlayerView();
+        createMultimediaView();
+    }
+
+    private void createMultimediaView() {
+        String illustrationUrl = mRecipe.getStepList().get(mStepPosition).getThumbnailUrl();
+
+        String videoUrl = mRecipe.getStepList().get(mStepPosition).getVideoUrl();
+
+        if(videoUrl != null && videoUrl.length() != 0) {
+            createMediaPlayerView();
+        }
+        else if(illustrationUrl != null && illustrationUrl.length() != 0) {
+            createIllustrationView();
+        }
+        else {
+            mStepIllustration.setVisibility(View.GONE);
+            mExoPlayerView.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void createIllustrationView() {
+        mStepIllustration.setVisibility(View.VISIBLE);
+        mExoPlayerView.setVisibility(View.GONE);
+
+        Picasso.with(getContext())
+                .load(mRecipe.getStepList().get(mStepPosition).getThumbnailUrl())
+                .placeholder(R.drawable.ic_highlight_off)
+                .error(R.drawable.ic_highlight_off)
+                .into(mStepIllustration);
     }
 
 
     private void createMediaPlayerView() {
+        mStepIllustration.setVisibility(View.GONE);
+        mExoPlayerView.setVisibility(View.VISIBLE);
+
         Context context = getContext();
 
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Activity.NOTIFICATION_SERVICE);
-        mExoPlayerView = mRootView.findViewById(R.id.fragment_recipe_step_media_player);
+
 
         mBakerPlayer = new BakerPlayer(context, mExoPlayerView, notificationManager);
         mBakerPlayer.setNotificationTitle(mRecipe.getName());
         mBakerPlayer.setNotificationText(mRecipe.getStepList().get(mStepPosition).getShortDescription());
-
 
         String urlString = mRecipe.getStepList().get(mStepPosition).getVideoUrl();
         if(urlString != null) {
@@ -117,6 +152,8 @@ public class RecipeStepFragment extends Fragment
 
     private void createGeneralViews() {
         Timber.d("createViews");
+        mStepIllustration = mRootView.findViewById(R.id.fragment_recipe_step_illustration);
+        mExoPlayerView = mRootView.findViewById(R.id.fragment_recipe_step_media_player);
 
         /* fragment_recipe_step_long_description is not defined in phone landscape layout */
         mLongDescription = mRootView.findViewById(R.id.fragment_recipe_step_long_description);
